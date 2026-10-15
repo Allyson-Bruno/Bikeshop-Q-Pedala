@@ -22,7 +22,8 @@
 			</a>
 		</li>
 		
-		<li>Cadastro de bicicletas.</li>
+		<li >Cadastro de bicicletas.</li>
+		
 		<li>Cadastro de serviços.</li>
 		<li>Agendamento de serviço.</li>
 		<li>Listagem de ordem de serviços agendadas/não executadas.</li>
