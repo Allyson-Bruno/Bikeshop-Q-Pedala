@@ -47,10 +47,14 @@
     	<scope>compile</scope>
 	</dependency>
 	
+	<!-- Source: https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api -->
+	<dependency>
+    	<groupId>org.junit.jupiter</groupId>
+    	<artifactId>junit-jupiter</artifactId>
+    	<version>6.0.3</version>
+    	<scope>test</scope>
+	</dependency>
 	
-	
-	
-  
   </dependencies>
 
   <build>
@@ -62,6 +66,14 @@
           <release>25</release>
         </configuration>
       </plugin>
+      <!-- Executa os testes durante o build Maven -->
+
+	<plugin>
+    	<groupId>org.apache.maven.plugins</groupId>
+    	<artifactId>maven-surefire-plugin</artifactId>
+    	<version>3.5.4</version>
+	</plugin>
+
       <plugin>
         <artifactId>maven-war-plugin</artifactId>
         <version>3.2.3</version>

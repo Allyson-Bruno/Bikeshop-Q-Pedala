@@ -13,8 +13,15 @@
 </head>
 <body>
 
+	<!-- Enviar esse Menu para análise, suspeito que falta os campos de listagem. -->
 	<ul>
-		<li>Cadastro de clientes.</li>
+		<li><a href="cadastro-cliente.jsp">Cadastro de clientes</a></li>
+		<li>
+			<a href="${pageContext.request.contextPath}/mvc?logica=ListarClientesLogica">
+				Listagem de clientes.
+			</a>
+		</li>
+		
 		<li>Cadastro de bicicletas.</li>
 		<li>Cadastro de serviços.</li>
 		<li>Agendamento de serviço.</li>

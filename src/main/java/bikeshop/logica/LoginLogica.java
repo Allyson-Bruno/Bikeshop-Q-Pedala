@@ -40,7 +40,7 @@ public class LoginLogica implements Logica {
 			session = request.getSession(true);
 			
 			//Definindo o tempo de inatividade para 2 minutos como solicitado (120 segundos).
-			session.setMaxInactiveInterval(120);
+			session.setMaxInactiveInterval(2 * 60);
 			
 			//É armazenado o status na sessão como verdadeiro.
 			session.setAttribute("usuarioLogado", true);

@@ -18,7 +18,7 @@
 		<input type="password" id="senha" name="senha" required="required"> <br>
 		
 		<input type="hidden" name="logica" value="LoginLogica">
-		<input type="submit" value="Enviar">
+		<input type="submit" value="Login">
 		
 	</form>
 	
