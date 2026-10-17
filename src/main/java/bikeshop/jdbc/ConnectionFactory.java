@@ -6,29 +6,31 @@ import java.sql.SQLException;
 
 public class ConnectionFactory {
 
-	public Connection getConnection() {
-		
-		try {
-			Class.forName("org.postgresql.Driver");
-		} catch (ClassNotFoundException e) {
-			throw new RuntimeException(e);
-		}
+    public Connection getConnection() {
 
-		//Obviamente será alterado por questões de segurança.
-		String url = "jdbc:postgresql://localhost/qpedalabikeshop";
-		String user = "postgres";
-		String password = "aluno";
-		
-		try {
-			
-			return DriverManager.getConnection(url, user, password);
-			
-		} catch (SQLException e) {
-			throw new RuntimeException(e);
-		}
-		
-	}
-		
-}//class ConnectionFactory.
-	
+        String url = System.getenv("BIKESHOP_DB_URL");
+        String usuario = System.getenv("BIKESHOP_DB_USER");
+        String senha = System.getenv("BIKESHOP_DB_PASSWORD");
 
+        if (url == null || url.isBlank() || usuario == null || usuario.isBlank() || 
+        		senha == null || senha.isBlank()) {
+
+            throw new IllegalStateException("Configure as variáveis BIKESHOP_DB_URL, "
+            		+ "BIKESHOP_DB_USER e BIKESHOP_DB_PASSWORD.");
+        }
+
+        try {
+        	
+            Class.forName("org.postgresql.Driver");
+
+            return DriverManager.getConnection(url, usuario, senha);
+
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException("Driver do PostgreSQL não encontrado.", e);
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao conectar ao banco de dados.", e);
+        }
+    }
+    
+}//class ConnectionFactory

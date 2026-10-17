@@ -30,7 +30,7 @@
 		
 		<li>
     		<a href="${pageContext.request.contextPath}/mvc?logica=ListarBicicletasLogica">
-        	Listagem de bicicletas
+        		Listagem de bicicletas
     		</a>
 		</li>
 		
@@ -42,7 +42,15 @@
 		<li>Histórico por cliente.</li>
 		<li>Histórico por bicicleta.</li>
 		<li>Relatório de serviços prestados.</li>
+		
+		<li>
+    		<a href="${pageContext.request.contextPath}/mvc?logica=LogoutLogica">
+        		Sair
+    		</a>
+		</li>
 	</ul>
+	
+	
 
 </body>
 </html>

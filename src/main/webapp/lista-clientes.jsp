@@ -26,17 +26,27 @@
 			</tr>		
 		</thead>
 		
+		<tbody>
+		
 		<c:forEach var="cliente" items="${clientes}">
 			
-			<tr>
-				<td><c:out value="${cliente.nome}" /></td>
-            	<td><c:out value="${cliente.cpf}" /></td>
-            	<td><c:out value="${cliente.dataNascimento}" /></td>
-            	<td><c:out value="${cliente.email}" /></td>
-            	<td><c:out value="${cliente.telefone}" /></td>
-			</tr>		
-		
-		</c:forEach>
+				<tr>
+					<td><c:out value="${cliente.nome}" /></td>
+	            	<td><c:out value="${cliente.cpf}" /></td>
+	            	<td><c:out value="${cliente.dataNascimento}" /></td>
+	            	<td><c:out value="${cliente.email}" /></td>
+	            	<td><c:out value="${cliente.telefone}" /></td>
+				</tr>		
+			
+			</c:forEach>
+			
+		<c:if test="${empty clientes}">
+        	<tr>
+            	<td colspan="5">Nenhum cliente cadastrado.</td>
+        	</tr>
+    	</c:if>
+			
+		</tbody>
 	
 	</table>	
 

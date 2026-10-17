@@ -28,8 +28,8 @@ public class ControllerServlet extends HttpServlet {
 			//Se os dados estiverem errados já barra a execução.
 			return;
 		}
-		
-		//Para evitar que o Login seja executado sem autenticação.
+
+		// Exige autenticação para todas as ações, exceto o login.
 		if (!"LoginLogica".equals(parametro)) {
 			
 			HttpSession session = request.getSession(false);

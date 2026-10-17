@@ -11,11 +11,28 @@ public class LoginLogica implements Logica {
 
 	@Override
 	public void executa(HttpServletRequest request, HttpServletResponse response) throws Exception {
-
+		
 		//Recuperando os dados formulário "login-admin".
+		if (!"POST".equalsIgnoreCase(request.getMethod())) {
+		    response.setHeader("Allow", "POST");
+		    response.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+		    return;
+		}
+
 		String usuario = request.getParameter("usuario");
 		String senha = request.getParameter("senha");
 
+		if (usuario == null || usuario.isBlank() ||
+		    senha == null || senha.isBlank()) {
+
+		    request.setAttribute("erro", "Informe o usuário e a senha.");
+
+		    request.getRequestDispatcher("/login-admin.jsp")
+		           .forward(request, response);
+
+		    return;
+		}
+		
 		//Define para onde o usuário será redirecionado:
 		String url;
 
@@ -52,7 +69,11 @@ public class LoginLogica implements Logica {
 			url = "menu-principal.jsp";
 		
 		} else {
-			url = "login-admin.jsp";
+		  
+			request.setAttribute("erro", "Usuário ou senha incorretos.");
+		    request.getRequestDispatcher("/login-admin.jsp").forward(request, response);
+
+		    return;
 		}
 		
 		//Realiza o redirecionamento do usuário.

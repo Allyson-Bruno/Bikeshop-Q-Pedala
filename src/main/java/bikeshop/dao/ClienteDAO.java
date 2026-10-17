@@ -24,9 +24,8 @@ public class ClienteDAO {
 				+ "cpf, nome, data_nascimento, email, telefone)"
 				+ "	VALUES (?, ?, ?, ?, ?);";
 		
-		try (Connection connection = new ConnectionFactory().getConnection()) {
-			
-			PreparedStatement preparedStatement = connection.prepareStatement(sql);
+		try (Connection connection = new ConnectionFactory().getConnection();
+				PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 			
 			preparedStatement.setString(1, cliente.getCpf());
 			preparedStatement.setString(2, cliente.getNome());
@@ -66,9 +65,9 @@ public class ClienteDAO {
 		
 		String sql = "SELECT * FROM public.cliente ORDER BY nome, id;";
 		
-		try (Connection connection = new ConnectionFactory().getConnection()) {
+		try (Connection connection = new ConnectionFactory().getConnection();
+			PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 		
-			PreparedStatement preparedStatement = connection.prepareStatement(sql);
 			ResultSet resultSet = preparedStatement.executeQuery();
 			
 			return extraiResultSet(resultSet);
