@@ -34,7 +34,18 @@
     		</a>
 		</li>
 		
-		<li>Cadastro de serviços.</li>
+		<li>
+    		<a href="${pageContext.request.contextPath}/cadastro-servico.jsp">
+        		Cadastro de serviços
+    		</a>
+		</li>
+		
+		<li>
+    		<a href="${pageContext.request.contextPath}/mvc?logica=ListarServicosLogica">
+        		Listagem de serviços
+    		</a>
+		</li>
+		
 		<li>Agendamento de serviço.</li>
 		<li>Listagem de ordem de serviços agendadas/não executadas.</li>
 		<li>Lançar serviços realizados.</li>
