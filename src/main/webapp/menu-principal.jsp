@@ -21,8 +21,18 @@
 				Listagem de clientes.
 			</a>
 		</li>
+
+		<li>
+    		<a href="${pageContext.request.contextPath}/mvc?logica=FormularioBicicletaLogica">
+        		Cadastro de bicicletas
+    		</a>
+		</li>		
 		
-		<li >Cadastro de bicicletas.</li>
+		<li>
+    		<a href="${pageContext.request.contextPath}/mvc?logica=ListarBicicletasLogica">
+        	Listagem de bicicletas
+    		</a>
+		</li>
 		
 		<li>Cadastro de serviços.</li>
 		<li>Agendamento de serviço.</li>

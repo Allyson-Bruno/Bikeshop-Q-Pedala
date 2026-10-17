@@ -1,18 +1,25 @@
 package bikeshop.logica;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 
 import bikeshop.dao.ClienteDAO;
+import bikeshop.excecao.CpfJaCadastradoException;
 import bikeshop.modelo.Cliente;
 import bikeshop.validacao.ClienteValidacao;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import bikeshop.excecao.CpfJaCadastradoException;
 
 public class CadastroClienteLogica implements Logica {
 
 	@Override
 	public void executa(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		
+        if (!"POST".equalsIgnoreCase(request.getMethod())) {
+            response.setHeader("Allow", "POST");
+            response.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+            return;
+        }
 
 		String cpf = request.getParameter("cpf");
         String nome = request.getParameter("nome");
@@ -27,7 +34,7 @@ public class CadastroClienteLogica implements Logica {
         	
         	try {
         		dataNascimento = LocalDate.parse(nascimento);
-			} catch (Exception e) {
+			} catch (DateTimeParseException e) {
 				//Permanece null para ser rejeitada pela validação abaixo.
 			}
         }

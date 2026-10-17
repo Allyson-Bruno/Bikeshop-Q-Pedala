@@ -13,6 +13,8 @@
 </head>
 <body>
 
+	 <h1>Cadastro de cliente</h1>
+
 	<c:if test="${not empty erro}">
     	<p><c:out value="${erro}" /></p>
 	</c:if>

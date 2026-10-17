@@ -56,7 +56,6 @@ public class ClienteDAO {
 		}
 	}
 	
-	//Parei aqui: metodo listarclientes.
 	/**
 	 * Retorna uma lista com todos os registros da tabela.
 	 * @return
@@ -80,7 +79,7 @@ public class ClienteDAO {
 				
 	}
 
-	public List<Cliente> extraiResultSet(ResultSet resultSet) throws SQLException {
+	private List<Cliente> extraiResultSet(ResultSet resultSet) throws SQLException {
 		
 		List<Cliente> clienteList = new ArrayList<>();
 		
@@ -89,6 +88,7 @@ public class ClienteDAO {
 			Cliente cliente = new Cliente();
 
 			//Os nomes aqui são os mesmos das tabelas do SGBD.
+			cliente.setId(resultSet.getLong("id"));
 			cliente.setCpf(resultSet.getString("cpf"));
 			cliente.setNome(resultSet.getString("nome"));
 			cliente.setEmail(resultSet.getString("email"));
@@ -100,6 +100,36 @@ public class ClienteDAO {
 
 		return clienteList;
 		
+	}
+	
+	public Cliente buscarPorId(Long id) {
+		
+	    String sql = """
+	        SELECT id, cpf, nome, data_nascimento, email, telefone
+	        FROM public.cliente
+	        WHERE id = ?
+	        """;
+
+	    try (Connection connection = new ConnectionFactory().getConnection();
+	         
+	    	PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+
+	        preparedStatement.setLong(1, id);
+
+	        try (ResultSet resultSet = preparedStatement.executeQuery()) {
+
+	            List<Cliente> clientes = extraiResultSet(resultSet);
+
+	            if (clientes.isEmpty()) {
+	                return null;
+	            }
+
+	            return clientes.get(0);
+	        }
+
+	    } catch (SQLException e) {
+	        throw new RuntimeException("Erro ao buscar cliente por ID.", e);
+	    }
 	}
 	
 }//class ClienteDAO.
