@@ -52,7 +52,12 @@
     		</a>
 		</li>		
 		
-		<li>Listagem de ordem de serviços agendadas/não executadas.</li>
+		<li>
+    		<a href="${pageContext.request.contextPath}/mvc?logica=ListarAgendamentosLogica">
+        		Agendamentos pendentes
+    		</a>
+		</li>
+		
 		<li>Lançar serviços realizados.</li>
 		<li>Realizar pagamento.</li>
 		<li>Histórico por cliente.</li>
