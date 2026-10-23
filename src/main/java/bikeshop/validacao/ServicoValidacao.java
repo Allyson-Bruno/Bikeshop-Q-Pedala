@@ -15,6 +15,36 @@ public class ServicoValidacao {
         return !nomeTratado.isBlank() && nomeTratado.length() <= 120;
     }
     
+    /**
+     * A conversão do valor está repetida em CadastroServicoLogica e AlterarValorServicoLogica. 
+     * Optei por extrair ela e criar um método compartilhado.
+     * 
+     * 
+     */
+    
+    //Ele cuida apenas da conversão do texto. 
+    //O método valorValido() continua verificando limite e casas decimais.
+    
+    public static BigDecimal converterValor(String valorInformado) {
+
+        if (valorInformado == null) {
+            return null;
+        }
+
+        String valorTratado = valorInformado.strip();
+
+        if (!valorTratado.matches("[0-9]+([.,][0-9]+)?")) {
+            return null;
+        }
+
+        try {
+            return new BigDecimal(valorTratado.replace(',', '.'));
+
+        } catch (NumberFormatException e) {
+            return null;
+        }
+    }
+    
     public static boolean valorValido(BigDecimal valor) {
 
         if (valor == null) {
@@ -30,5 +60,8 @@ public class ServicoValidacao {
             //Mas aceita 150.000, pois os zeros extras não mudam o valor
             && valor.stripTrailingZeros().scale() <= 2;
     }
+    
+    
+    
     
 }//class ServicoValidacao.

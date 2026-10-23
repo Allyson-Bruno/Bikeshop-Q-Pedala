@@ -1,6 +1,8 @@
 package bikeshop.validacao;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.math.BigDecimal;
@@ -94,6 +96,65 @@ public class ServicoValidacaoTest {
     @Test
     public void deveAceitarZerosDecimaisExtras() {
         assertTrue(ServicoValidacao.valorValido(new BigDecimal("150.000")));
+    }
+    
+    @Test
+    public void deveConverterValorComVirgula() {
+        assertEquals(
+            new BigDecimal("150.50"),
+            ServicoValidacao.converterValor("150,50")
+        );
+    }
+
+    @Test
+    public void deveConverterValorComPonto() {
+        assertEquals(
+            new BigDecimal("150.50"),
+            ServicoValidacao.converterValor("150.50")
+        );
+    }
+
+    @Test
+    public void deveConverterValorInteiro() {
+        assertEquals(
+            new BigDecimal("150"),
+            ServicoValidacao.converterValor("150")
+        );
+    }
+
+    @Test
+    public void deveConverterValorComEspacosNasExtremidades() {
+        assertEquals(
+            new BigDecimal("150.50"),
+            ServicoValidacao.converterValor("  150,50  ")
+        );
+    }
+
+    @Test
+    public void deveRetornarNullParaValorAusente() {
+        assertNull(ServicoValidacao.converterValor(null));
+        assertNull(ServicoValidacao.converterValor(""));
+        assertNull(ServicoValidacao.converterValor("   "));
+    }
+
+    @Test
+    public void deveRetornarNullParaFormatoInvalido() {
+
+        String[] valores = {
+            "abc", "-10", "1.500,50", "150,50.00", "R$ 150,00"
+        };
+
+        for (String valor : valores) {
+            assertNull(ServicoValidacao.converterValor(valor), valor);
+        }
+    }
+
+    @Test
+    public void deveConverterMasRejeitarFracaoMenorQueUmCentavo() {
+        BigDecimal valor = ServicoValidacao.converterValor("150,001");
+
+        assertEquals(new BigDecimal("150.001"), valor);
+        assertFalse(ServicoValidacao.valorValido(valor));
     }
     
 }//class ServicoValidacaoTest.

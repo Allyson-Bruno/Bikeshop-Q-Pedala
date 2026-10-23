@@ -21,28 +21,11 @@ public class CadastroServicoLogica implements Logica {
         }
 
         String nome = request.getParameter("nome");
+        
         String valorInformado = request.getParameter("valor");
 
-        BigDecimal valor = null;
-
-        if (valorInformado != null) {
-
-            String valorTratado = valorInformado.strip();
-
-            // Aceita números com um único separador decimal opcional.
-            if (valorTratado.matches("[0-9]+([.,][0-9]+)?")) {
-
-                try {
-                    valor = new BigDecimal(
-                        valorTratado.replace(',', '.')
-                    );
-
-                } catch (NumberFormatException e) {
-                    // Permanece null para ser rejeitado pela validação.
-                }
-            }
-        }
-
+        BigDecimal valor = ServicoValidacao.converterValor(valorInformado);
+        
         String erro = null;
 
         if (!ServicoValidacao.nomeValido(nome)) {

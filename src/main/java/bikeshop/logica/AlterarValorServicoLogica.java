@@ -48,25 +48,10 @@ public class AlterarValorServicoLogica implements Logica {
             response.sendError(HttpServletResponse.SC_NOT_FOUND, "Serviço não encontrado.");
             return;
         }
-
+        
         String valorInformado = request.getParameter("valor");
-        BigDecimal valor = null;
 
-        if (valorInformado != null) {
-
-            String valorTratado = valorInformado.strip();
-
-            if (valorTratado.matches("[0-9]+([.,][0-9]+)?")) {
-                try {
-                    valor = new BigDecimal(
-                        valorTratado.replace(',', '.')
-                    );
-
-                } catch (NumberFormatException e) {
-                    // Permanece null para ser rejeitado pela validação.
-                }
-            }
-        }
+        BigDecimal valor = ServicoValidacao.converterValor(valorInformado);
 
         if (!ServicoValidacao.valorValido(valor)) {
 
