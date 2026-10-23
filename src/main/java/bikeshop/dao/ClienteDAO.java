@@ -131,4 +131,38 @@ public class ClienteDAO {
 	    }
 	}
 	
+	public Cliente buscarPorCpf(String cpf) {
+
+	    String sql = """
+	        SELECT id, cpf, nome, data_nascimento, email, telefone
+	        FROM public.cliente
+	        WHERE cpf = ?
+	        """;
+
+	    try (Connection connection = new ConnectionFactory().getConnection();
+	         
+	    	PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+
+	        preparedStatement.setString(1, cpf);
+
+	        try (ResultSet resultSet = preparedStatement.executeQuery()) {
+
+	            List<Cliente> clientes = extraiResultSet(resultSet);
+
+	            if (clientes.isEmpty()) {
+	                return null;
+	            }
+
+	            return clientes.get(0);
+	        }
+
+	    } catch (SQLException e) {
+	        throw new RuntimeException("Erro ao buscar cliente por CPF.", e);
+	    }
+	}
+	
+	
+	
+	
+	
 }//class ClienteDAO.

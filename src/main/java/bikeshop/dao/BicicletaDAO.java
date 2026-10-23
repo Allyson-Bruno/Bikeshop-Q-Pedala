@@ -144,4 +144,74 @@ public class BicicletaDAO {
         return bicicletas;
     }
     
+    public List<Bicicleta> listaPorCliente(Long idCliente) {
+
+        String sql = """
+            SELECT b.id, b.marca, b.modelo, b.tipo,
+                   b.tamanho_quadro, b.numero_serie, b.ano_fabricacao,
+                   c.id AS proprietario_id,
+                   c.nome AS proprietario_nome,
+                   c.cpf AS proprietario_cpf
+            FROM public.bicicleta b
+            INNER JOIN public.cliente c ON c.id = b.id_proprietario
+            WHERE b.id_proprietario = ?
+            ORDER BY b.marca, b.modelo, b.id
+            """;
+
+        try (Connection connection = new ConnectionFactory().getConnection();
+        		
+        	PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+
+            preparedStatement.setLong(1, idCliente);
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+
+                return extraiResultSet(resultSet);
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao listar bicicletas do cliente.", e);
+        }
+    }
+    
+    public Bicicleta buscarPorIdECliente(Long idBicicleta, Long idCliente) {
+
+        String sql = """
+            SELECT b.id, b.marca, b.modelo, b.tipo,
+                   b.tamanho_quadro, b.numero_serie, b.ano_fabricacao,
+                   c.id AS proprietario_id,
+                   c.nome AS proprietario_nome,
+                   c.cpf AS proprietario_cpf
+            FROM public.bicicleta b
+            INNER JOIN public.cliente c ON c.id = b.id_proprietario
+            WHERE b.id = ? AND b.id_proprietario = ?
+            """;
+
+        try (Connection connection = new ConnectionFactory().getConnection();
+
+        	PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+
+            preparedStatement.setLong(1, idBicicleta);
+            preparedStatement.setLong(2, idCliente);
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+
+                List<Bicicleta> bicicletas = extraiResultSet(resultSet);
+
+                if (bicicletas.isEmpty()) {
+                    return null;
+                }
+
+                return bicicletas.get(0);
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(
+                "Erro ao buscar bicicleta do cliente.", e
+            );
+        }
+    }
+    
+    
+    
 }//class BicicletaDAO

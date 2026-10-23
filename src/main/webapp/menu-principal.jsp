@@ -46,7 +46,12 @@
     		</a>
 		</li>
 		
-		<li>Agendamento de serviço.</li>
+		<li>
+    		<a href="${pageContext.request.contextPath}/mvc?logica=FormularioAgendamentoLogica">
+        		Agendamento de serviço
+    		</a>
+		</li>		
+		
 		<li>Listagem de ordem de serviços agendadas/não executadas.</li>
 		<li>Lançar serviços realizados.</li>
 		<li>Realizar pagamento.</li>
