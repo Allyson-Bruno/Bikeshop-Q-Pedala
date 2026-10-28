@@ -1,5 +1,6 @@
 package bikeshop.dao;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -20,6 +21,7 @@ import bikeshop.modelo.Cliente;
 import bikeshop.modelo.ItemOrdemServico;
 import bikeshop.modelo.OrdemServico;
 import bikeshop.modelo.Servico;
+import bikeshop.validacao.ExecucaoValidacao;
 
 public class OrdemServicoDAO {
 
@@ -141,7 +143,8 @@ public class OrdemServicoDAO {
                    i.valor AS item_valor,
                    i.executado,
                    s.id AS servico_id,
-                   s.nome AS servico_nome
+                   s.nome AS servico_nome,
+                   s.valor AS servico_valor
             FROM public.ordem_servico os
             INNER JOIN public.cliente c ON c.id = os.id_cliente
             INNER JOIN public.bicicleta b ON b.id = os.id_bicicleta
@@ -226,9 +229,18 @@ public class OrdemServicoDAO {
 
             // Cada linha da consulta representa um item da ordem.
             Servico servico = new Servico();
+            
+            /*
+             * Uma distintição importante:
+             * item.servico.valor: preço atual do catálogo, usado como sugestão.
+             * item.valor: valor histórico registrado na execução. 
+             * Continua null enquanto o item não foi executado.
+             * 
+             */
 
             servico.setId(resultSet.getLong("servico_id"));
             servico.setNome(resultSet.getString("servico_nome"));
+            servico.setValor(resultSet.getBigDecimal("servico_valor"));
 
             ItemOrdemServico item = new ItemOrdemServico();
 
@@ -263,6 +275,191 @@ public class OrdemServicoDAO {
 
         } catch (SQLException e) {
             throw new RuntimeException("Erro ao cancelar agendamento.", e);
+        }
+    }
+    
+    public OrdemServico buscarAgendadaPorId(Long id) {
+
+        String sql = """
+            SELECT os.id AS ordem_id,
+                   os.data_agendamento,
+                   os.status,
+                   os.desconto,
+                   os.valor_total,
+                   c.id AS cliente_id,
+                   c.nome AS cliente_nome,
+                   c.cpf AS cliente_cpf,
+                   b.id AS bicicleta_id,
+                   b.marca,
+                   b.modelo,
+                   b.numero_serie,
+                   i.id AS item_id,
+                   i.valor AS item_valor,
+                   i.executado,
+                   s.id AS servico_id,
+                   s.nome AS servico_nome,
+                   s.valor AS servico_valor
+            FROM public.ordem_servico os
+            INNER JOIN public.cliente c ON c.id = os.id_cliente
+            INNER JOIN public.bicicleta b ON b.id = os.id_bicicleta
+            INNER JOIN public.item_ordem_servico i
+                ON i.id_ordem_servico = os.id
+            INNER JOIN public.servico s ON s.id = i.id_servico
+            WHERE os.id = ? AND os.status = 'AGENDADA'
+            ORDER BY i.id
+            """;
+
+        try (Connection connection = new ConnectionFactory().getConnection();
+             
+        	PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+
+            preparedStatement.setLong(1, id);
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+
+                List<OrdemServico> ordens = extraiAgendamentos(resultSet);
+
+                if (ordens.isEmpty()) {
+                    return null;
+                }
+
+                return ordens.get(0);
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(
+                "Erro ao buscar OS agendada por ID.", e
+            );
+        }
+    }
+    
+    public boolean registrarExecucao(Long idOrdem, LocalDate dataExecucao, Map<Long, BigDecimal> valoresPorItem) {
+
+        if (idOrdem == null || idOrdem <= 0) {
+            throw new IllegalArgumentException("Informe uma OS válida.");
+        }
+
+        if (!ExecucaoValidacao.dataExecucaoValida(dataExecucao)) {
+            throw new IllegalArgumentException(
+                "Informe uma data de execução válida e que não seja futura."
+            );
+        }
+
+        if (valoresPorItem == null || valoresPorItem.isEmpty()) {
+            throw new IllegalArgumentException(
+                "Selecione pelo menos um serviço realizado."
+            );
+        }
+
+        for (Long idItem : valoresPorItem.keySet()) {
+            if (idItem == null || idItem <= 0) {
+                throw new IllegalArgumentException(
+                    "Existe um item selecionado com identificação inválida."
+                );
+            }
+        }
+
+        // Valida os valores individuais e calcula o total no servidor.
+        BigDecimal total = ExecucaoValidacao.calcularTotal(
+            new ArrayList<>(valoresPorItem.values())
+        );
+
+        String sqlBuscarOrdem = """
+            SELECT status
+            FROM public.ordem_servico
+            WHERE id = ?
+            FOR UPDATE
+            """;
+
+        String sqlAtualizarItem = """
+            UPDATE public.item_ordem_servico
+            SET valor = ?, executado = TRUE
+            WHERE id = ?
+              AND id_ordem_servico = ?
+              AND executado = FALSE
+            """;
+
+        String sqlAtualizarOrdem = """
+            UPDATE public.ordem_servico
+            SET data_execucao = ?,
+                valor_total = ?,
+                status = 'EXECUTADA'
+            WHERE id = ?
+              AND status = 'AGENDADA'
+            """;
+
+        try (Connection connection = new ConnectionFactory().getConnection()) {
+
+            connection.setAutoCommit(false);
+
+            try {
+
+                // Bloqueia a OS durante esta transação.
+                try (PreparedStatement statement = connection.prepareStatement(sqlBuscarOrdem)) {
+
+                    statement.setLong(1, idOrdem);
+
+                    try (ResultSet resultSet = statement.executeQuery()) {
+
+                        if (!resultSet.next() || !"AGENDADA".equals(resultSet.getString("status"))) {
+
+                            connection.rollback();
+                            return false;
+                        }
+                    }
+                }
+
+                // Atualiza somente os itens selecionados.
+                try (PreparedStatement statement = connection.prepareStatement(sqlAtualizarItem)) {
+
+                    for (Map.Entry<Long, BigDecimal> entrada: valoresPorItem.entrySet()) {
+
+                        statement.setBigDecimal(1, entrada.getValue().setScale(2));
+
+                        statement.setLong(2, entrada.getKey());
+                        statement.setLong(3, idOrdem);
+
+                        int registrosAlterados = statement.executeUpdate();
+
+                        if (registrosAlterados != 1) {
+                            throw new IllegalArgumentException(
+                                "Um dos itens selecionados não pertence à OS "
+                                + "ou já foi executado.");
+                        }
+                    }
+                }
+
+                // Finaliza a OS após atualizar todos os itens selecionados.
+                try (PreparedStatement statement = connection.prepareStatement(sqlAtualizarOrdem)) {
+
+                    statement.setObject(1, dataExecucao);
+                    statement.setBigDecimal(2, total);
+                    statement.setLong(3, idOrdem);
+
+                    int registrosAlterados = statement.executeUpdate();
+
+                    if (registrosAlterados != 1) {
+                        throw new SQLException("Não foi possível atualizar o status da OS.");
+                    }
+                }
+
+                connection.commit();
+                return true;
+
+            } catch (SQLException | RuntimeException e) {
+
+                try {
+                    connection.rollback();
+
+                } catch (SQLException erroRollback) {
+                    e.addSuppressed(erroRollback);
+                }
+
+                throw e;
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao registrar a execução da OS.", e);
         }
     }
     

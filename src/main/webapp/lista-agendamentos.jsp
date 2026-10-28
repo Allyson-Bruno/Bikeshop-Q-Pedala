@@ -29,6 +29,10 @@
         Não foi possível cancelar: a OS não existe ou já não está agendada.
     	</p>
 	</c:if>
+	
+	<c:if test="${param.executada == 'true'}">
+    	<p>Execução registrada com sucesso.</p>
+	</c:if>
 
     <form action="${pageContext.request.contextPath}/mvc" method="get">
 
@@ -100,6 +104,12 @@
                         </td>
                         
                      	<td>
+                     	
+                     					
+        		<a href="${pageContext.request.contextPath}/mvc?logica=FormularioExecucaoLogica&amp;id=${ordem.id}">
+    							Registrar execução
+				</a>
+                     	
                     
     						<form action="${pageContext.request.contextPath}/mvc" method="post">
 
