@@ -66,7 +66,7 @@
         <c:set var="selecionado" value="${false}" />
 
         <c:forEach var="idSelecionado" items="${paramValues.idItens}">
-            <c:if test="${idSelecionado == item.id}">
+            <c:if test="${idSelecionado eq item.id.toString()}">
                 <c:set var="selecionado" value="${true}" />
             </c:if>
         </c:forEach>

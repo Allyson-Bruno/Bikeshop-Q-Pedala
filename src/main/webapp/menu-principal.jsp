@@ -58,8 +58,12 @@
     		</a>
 		</li>
 		
-		<li>Lançar serviços realizados.</li>
-		<li>Realizar pagamento.</li>
+		<li>
+    		<a href="${pageContext.request.contextPath}/mvc?logica=ListarPendentesPagamentoLogica">
+        		Realizar pagamento
+    		</a>
+		</li>
+
 		<li>Histórico por cliente.</li>
 		<li>Histórico por bicicleta.</li>
 		<li>Relatório de serviços prestados.</li>

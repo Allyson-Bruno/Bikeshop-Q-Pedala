@@ -22,6 +22,7 @@ import bikeshop.modelo.ItemOrdemServico;
 import bikeshop.modelo.OrdemServico;
 import bikeshop.modelo.Servico;
 import bikeshop.validacao.ExecucaoValidacao;
+import bikeshop.validacao.PagamentoValidacao;
 
 public class OrdemServicoDAO {
 
@@ -460,6 +461,303 @@ public class OrdemServicoDAO {
 
         } catch (SQLException e) {
             throw new RuntimeException("Erro ao registrar a execução da OS.", e);
+        }
+    }
+    
+    public List<OrdemServico> listaPendentesPagamento() {
+
+        String sql = """
+            SELECT os.id AS ordem_id,
+                   os.data_agendamento,
+                   os.data_execucao,
+                   os.status,
+                   os.desconto,
+                   os.valor_total,
+                   c.id AS cliente_id,
+                   c.nome AS cliente_nome,
+                   c.cpf AS cliente_cpf,
+                   b.id AS bicicleta_id,
+                   b.marca,
+                   b.modelo,
+                   b.numero_serie
+            FROM public.ordem_servico os
+            INNER JOIN public.cliente c ON c.id = os.id_cliente
+            INNER JOIN public.bicicleta b ON b.id = os.id_bicicleta
+            WHERE os.status = 'EXECUTADA'
+            ORDER BY os.data_execucao, os.id
+            """;
+
+        try (Connection connection = new ConnectionFactory().getConnection();
+             
+        	PreparedStatement statement = connection.prepareStatement(sql);
+             
+        	ResultSet resultSet = statement.executeQuery()) {
+
+            return extraiPendentesPagamento(resultSet);
+
+        } catch (SQLException e) {
+            throw new RuntimeException(
+                "Erro ao listar OS pendentes de pagamento.", e
+            );
+        }
+    }
+    
+    private List<OrdemServico> extraiPendentesPagamento(ResultSet resultSet) throws SQLException {
+
+        List<OrdemServico> ordens = new ArrayList<>();
+
+        while (resultSet.next()) {
+
+            OrdemServico ordem = new OrdemServico();
+
+            ordem.setId(resultSet.getLong("ordem_id"));
+
+            ordem.setDataAgendamento(resultSet.getDate("data_agendamento").toLocalDate());
+
+            ordem.setDataExecucao(resultSet.getDate("data_execucao").toLocalDate());
+
+            ordem.setStatus(resultSet.getString("status"));
+            ordem.setDesconto(resultSet.getBigDecimal("desconto"));
+            ordem.setValorTotal(resultSet.getBigDecimal("valor_total"));
+
+            Cliente cliente = new Cliente();
+
+            cliente.setId(resultSet.getLong("cliente_id"));
+            cliente.setNome(resultSet.getString("cliente_nome"));
+            cliente.setCpf(resultSet.getString("cliente_cpf"));
+
+            ordem.setCliente(cliente);
+
+            Bicicleta bicicleta = new Bicicleta();
+
+            bicicleta.setId(resultSet.getLong("bicicleta_id"));
+            bicicleta.setMarca(resultSet.getString("marca"));
+            bicicleta.setModelo(resultSet.getString("modelo"));
+            bicicleta.setNumeroSerie(resultSet.getString("numero_serie"));
+
+            ordem.setBicicleta(bicicleta);
+
+            ordens.add(ordem);
+        }
+
+        return ordens;
+    }
+    
+    public OrdemServico buscarExecutadaPorId(Long id) {
+
+        String sql = """
+            SELECT os.id AS ordem_id,
+                   os.data_agendamento,
+                   os.data_execucao,
+                   os.status,
+                   os.desconto,
+                   os.valor_total,
+                   c.id AS cliente_id,
+                   c.nome AS cliente_nome,
+                   c.cpf AS cliente_cpf,
+                   b.id AS bicicleta_id,
+                   b.marca,
+                   b.modelo,
+                   b.numero_serie,
+                   i.id AS item_id,
+                   i.valor AS item_valor,
+                   i.executado,
+                   s.id AS servico_id,
+                   s.nome AS servico_nome
+            FROM public.ordem_servico os
+            INNER JOIN public.cliente c ON c.id = os.id_cliente
+            INNER JOIN public.bicicleta b ON b.id = os.id_bicicleta
+            INNER JOIN public.item_ordem_servico i
+                ON i.id_ordem_servico = os.id
+            INNER JOIN public.servico s ON s.id = i.id_servico
+            WHERE os.id = ?
+              AND os.status = 'EXECUTADA'
+              AND i.executado = TRUE
+            ORDER BY i.id
+            """;
+
+        try (Connection connection = new ConnectionFactory().getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setLong(1, id);
+
+            try (ResultSet resultSet = statement.executeQuery()) {
+                return extraiExecutada(resultSet);
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(
+                "Erro ao buscar OS executada por ID.", e
+            );
+        }
+    }
+    
+    private OrdemServico extraiExecutada(ResultSet resultSet) throws SQLException {
+
+        OrdemServico ordem = null;
+
+        while (resultSet.next()) {
+
+            // Os dados gerais da OS são preenchidos uma única vez.
+            if (ordem == null) {
+
+                ordem = new OrdemServico();
+
+                ordem.setId(resultSet.getLong("ordem_id"));
+
+                ordem.setDataAgendamento(resultSet.getDate("data_agendamento").toLocalDate());
+
+                ordem.setDataExecucao(resultSet.getDate("data_execucao").toLocalDate());
+
+                ordem.setStatus(resultSet.getString("status"));
+                ordem.setDesconto(resultSet.getBigDecimal("desconto"));
+                ordem.setValorTotal(resultSet.getBigDecimal("valor_total"));
+
+                Cliente cliente = new Cliente();
+
+                cliente.setId(resultSet.getLong("cliente_id"));
+                cliente.setNome(resultSet.getString("cliente_nome"));
+                cliente.setCpf(resultSet.getString("cliente_cpf"));
+
+                ordem.setCliente(cliente);
+
+                Bicicleta bicicleta = new Bicicleta();
+
+                bicicleta.setId(resultSet.getLong("bicicleta_id"));
+                bicicleta.setMarca(resultSet.getString("marca"));
+                bicicleta.setModelo(resultSet.getString("modelo"));
+                bicicleta.setNumeroSerie(resultSet.getString("numero_serie"));
+
+                ordem.setBicicleta(bicicleta);
+            }
+
+            // Cada linha corresponde a um serviço realizado.
+            Servico servico = new Servico();
+
+            servico.setId(resultSet.getLong("servico_id"));
+            servico.setNome(resultSet.getString("servico_nome"));
+
+            ItemOrdemServico item = new ItemOrdemServico();
+
+            item.setId(resultSet.getLong("item_id"));
+            item.setServico(servico);
+            item.setValor(resultSet.getBigDecimal("item_valor"));
+            item.setExecutado(resultSet.getBoolean("executado"));
+
+            ordem.getItens().add(item);
+        }
+
+        return ordem;
+    }
+    
+    public boolean registrarPagamento(Long idOrdem, boolean aplicarDesconto) {
+
+        if (idOrdem == null || idOrdem <= 0) {
+            throw new IllegalArgumentException(
+                "Informe uma OS válida."
+            );
+        }
+
+        String sqlBuscarOrdem = """
+            SELECT status, valor_total
+            FROM public.ordem_servico
+            WHERE id = ?
+            FOR UPDATE
+            """;
+
+        String sqlContarItens = """
+            SELECT COUNT(*) AS quantidade
+            FROM public.item_ordem_servico
+            WHERE id_ordem_servico = ?
+              AND executado = TRUE
+            """;
+
+        String sqlRegistrarPagamento = """
+            UPDATE public.ordem_servico
+            SET desconto = ?,
+                status = 'PAGA'
+            WHERE id = ?
+              AND status = 'EXECUTADA'
+            """;
+
+        try (Connection connection = new ConnectionFactory().getConnection()) {
+
+            connection.setAutoCommit(false);
+
+            try {
+
+                BigDecimal total;
+
+                // Bloqueia a OS até o término desta transação.
+                try (PreparedStatement statement = connection.prepareStatement(sqlBuscarOrdem)) {
+
+                    statement.setLong(1, idOrdem);
+
+                    try (ResultSet resultSet = statement.executeQuery()) {
+
+                        if (!resultSet.next() || !"EXECUTADA".equals(resultSet.getString("status"))) {
+
+                            connection.rollback();
+                            return false;
+                        }
+
+                        total = resultSet.getBigDecimal("valor_total");
+                    }
+                }
+
+                int quantidadeExecutada;
+
+                // Conta somente os serviços efetivamente realizados.
+                try (PreparedStatement statement = connection.prepareStatement(sqlContarItens)) {
+
+                    statement.setLong(1, idOrdem);
+
+                    try (ResultSet resultSet = statement.executeQuery()) {
+
+                        if (!resultSet.next()) {
+                            throw new SQLException("Não foi possível contar os serviços realizados.");
+                        }
+
+                        quantidadeExecutada = resultSet.getInt("quantidade");
+                    }
+                }
+
+                // Reconfere o direito ao desconto usando os dados do banco.
+                BigDecimal desconto = PagamentoValidacao.calcularDesconto(
+                    total,
+                    quantidadeExecutada,
+                    aplicarDesconto
+                );
+
+                try (PreparedStatement statement = connection.prepareStatement(sqlRegistrarPagamento)) {
+
+                    statement.setBigDecimal(1, desconto);
+                    statement.setLong(2, idOrdem);
+
+                    int registrosAlterados = statement.executeUpdate();
+
+                    if (registrosAlterados != 1) {
+                        throw new SQLException("Não foi possível registrar o pagamento da OS.");
+                    }
+                }
+
+                connection.commit();
+                return true;
+
+            } catch (SQLException | RuntimeException e) {
+
+                try {
+                    connection.rollback();
+
+                } catch (SQLException erroRollback) {
+                    e.addSuppressed(erroRollback);
+                }
+
+                throw e;
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao registrar o pagamento da OS.", e);
         }
     }
     
