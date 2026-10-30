@@ -212,6 +212,41 @@ public class BicicletaDAO {
         }
     }
     
+    public Bicicleta buscarPorNumeroSerie(String numeroSerie) {
+
+        String sql = """
+            SELECT b.id, b.marca, b.modelo, b.tipo,
+                   b.tamanho_quadro, b.numero_serie, b.ano_fabricacao,
+                   c.id AS proprietario_id,
+                   c.nome AS proprietario_nome,
+                   c.cpf AS proprietario_cpf
+            FROM public.bicicleta b
+            LEFT JOIN public.cliente c ON c.id = b.id_proprietario
+            WHERE b.numero_serie = ?
+            """;
+
+        try (Connection connection = new ConnectionFactory().getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setString(1, numeroSerie);
+
+            try (ResultSet resultSet = statement.executeQuery()) {
+
+                List<Bicicleta> bicicletas = extraiResultSet(resultSet);
+
+                if (bicicletas.isEmpty()) {
+                    return null;
+                }
+
+                return bicicletas.get(0);
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(
+                "Erro ao buscar bicicleta pelo número de série.", e
+            );
+        }
+    }
     
     
 }//class BicicletaDAO

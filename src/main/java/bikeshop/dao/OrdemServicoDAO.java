@@ -860,5 +860,50 @@ public class OrdemServicoDAO {
         }
     }
     
+    public List<OrdemServico> listaHistoricoPorBicicleta(Long idBicicleta) {
+
+        if (idBicicleta == null || idBicicleta <= 0) {
+            throw new IllegalArgumentException(
+                "Informe uma bicicleta válida."
+            );
+        }
+
+        String sql = """
+            SELECT os.id AS ordem_id,
+                   os.data_agendamento,
+                   os.data_execucao,
+                   os.status,
+                   os.desconto,
+                   os.valor_total,
+                   c.id AS cliente_id,
+                   c.nome AS cliente_nome,
+                   c.cpf AS cliente_cpf,
+                   b.id AS bicicleta_id,
+                   b.marca,
+                   b.modelo,
+                   b.numero_serie
+            FROM public.ordem_servico os
+            INNER JOIN public.cliente c ON c.id = os.id_cliente
+            INNER JOIN public.bicicleta b ON b.id = os.id_bicicleta
+            WHERE os.id_bicicleta = ?
+              AND os.status IN ('EXECUTADA', 'PAGA')
+            ORDER BY os.data_execucao DESC, os.id DESC
+            """;
+
+        try (Connection connection = new ConnectionFactory().getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setLong(1, idBicicleta);
+
+            try (ResultSet resultSet = statement.executeQuery()) {
+                return extraiResumoOrdens(resultSet);
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(
+                "Erro ao consultar o histórico da bicicleta.", e
+            );
+        }
+    }
     
 }//class OrdemServicoDAO.

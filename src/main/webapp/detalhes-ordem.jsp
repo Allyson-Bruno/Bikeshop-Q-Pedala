@@ -135,6 +135,19 @@
                     Ver histórico deste cliente
                 </a>
             </p>
+            
+            <c:url var="urlHistoricoBicicleta" value="/mvc">
+   
+   				<c:param name="logica" value="HistoricoBicicletaLogica" />
+    			<c:param name="numeroSerie" value="${ordem.bicicleta.numeroSerie}" />
+			
+			</c:url>
+
+			<p>
+    			<a href="<c:out value='${urlHistoricoBicicleta}' />">
+        			Ver histórico desta bicicleta
+		    	</a>
+			</p>
 
         </c:when>
 

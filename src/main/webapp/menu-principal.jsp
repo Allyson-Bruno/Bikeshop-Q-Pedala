@@ -70,7 +70,12 @@
     		</a>
 		</li>		
 		
-		<li>Histórico por bicicleta.</li>
+		<li>
+    		<a href="${pageContext.request.contextPath}/mvc?logica=HistoricoBicicletaLogica">
+        		Histórico por bicicleta
+    		</a>
+		</li>
+		
 		<li>Relatório de serviços prestados.</li>
 		
 		<li>
