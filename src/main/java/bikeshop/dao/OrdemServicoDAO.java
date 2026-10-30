@@ -23,6 +23,7 @@ import bikeshop.modelo.OrdemServico;
 import bikeshop.modelo.Servico;
 import bikeshop.validacao.ExecucaoValidacao;
 import bikeshop.validacao.PagamentoValidacao;
+import bikeshop.validacao.RelatorioValidacao;
 
 public class OrdemServicoDAO {
 
@@ -904,6 +905,128 @@ public class OrdemServicoDAO {
                 "Erro ao consultar o histórico da bicicleta.", e
             );
         }
+    }
+    
+    public List<OrdemServico> listaRelatorioServicos(
+            LocalDate dataInicial,
+            LocalDate dataFinal) {
+
+        if (!RelatorioValidacao.intervaloValido(dataInicial, dataFinal)) {
+            throw new IllegalArgumentException(
+                "Informe um intervalo válido, com a data inicial "
+                + "anterior ou igual à data final."
+            );
+        }
+
+        String sql = """
+            SELECT os.id AS ordem_id,
+                   os.data_agendamento,
+                   os.data_execucao,
+                   os.status,
+                   os.desconto,
+                   os.valor_total,
+                   c.id AS cliente_id,
+                   c.nome AS cliente_nome,
+                   c.cpf AS cliente_cpf,
+                   b.id AS bicicleta_id,
+                   b.marca,
+                   b.modelo,
+                   b.numero_serie,
+                   i.id AS item_id,
+                   i.valor AS item_valor,
+                   i.executado,
+                   s.id AS servico_id,
+                   s.nome AS servico_nome
+            FROM public.ordem_servico os
+            INNER JOIN public.cliente c ON c.id = os.id_cliente
+            INNER JOIN public.bicicleta b ON b.id = os.id_bicicleta
+            INNER JOIN public.item_ordem_servico i
+                ON i.id_ordem_servico = os.id
+            INNER JOIN public.servico s ON s.id = i.id_servico
+            WHERE os.status IN ('EXECUTADA', 'PAGA')
+              AND os.data_execucao BETWEEN ? AND ?
+              AND i.executado = TRUE
+            ORDER BY os.data_execucao, os.id, i.id
+            """;
+
+        try (Connection connection = new ConnectionFactory().getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setObject(1, dataInicial);
+            statement.setObject(2, dataFinal);
+
+            try (ResultSet resultSet = statement.executeQuery()) {
+                return extraiRelatorioServicos(resultSet);
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(
+                "Erro ao consultar o relatório de serviços prestados.", e
+            );
+        }
+    }
+    
+    private List<OrdemServico> extraiRelatorioServicos(ResultSet resultSet) throws SQLException {
+
+        Map<Long, OrdemServico> ordens = new LinkedHashMap<>();
+
+        while (resultSet.next()) {
+
+            Long idOrdem = resultSet.getLong("ordem_id");
+
+            OrdemServico ordem = ordens.get(idOrdem);
+
+            // Monta os dados gerais somente na primeira linha da OS.
+            if (ordem == null) {
+
+                ordem = new OrdemServico();
+
+                ordem.setId(idOrdem);
+
+                ordem.setDataAgendamento(resultSet.getDate("data_agendamento").toLocalDate());
+
+                ordem.setDataExecucao(resultSet.getDate("data_execucao").toLocalDate());
+
+                ordem.setStatus(resultSet.getString("status"));
+                ordem.setDesconto(resultSet.getBigDecimal("desconto"));
+                ordem.setValorTotal(resultSet.getBigDecimal("valor_total"));
+
+                Cliente cliente = new Cliente();
+
+                cliente.setId(resultSet.getLong("cliente_id"));
+                cliente.setNome(resultSet.getString("cliente_nome"));
+                cliente.setCpf(resultSet.getString("cliente_cpf"));
+
+                ordem.setCliente(cliente);
+
+                Bicicleta bicicleta = new Bicicleta();
+
+                bicicleta.setId(resultSet.getLong("bicicleta_id"));
+                bicicleta.setMarca(resultSet.getString("marca"));
+                bicicleta.setModelo(resultSet.getString("modelo"));
+                bicicleta.setNumeroSerie(resultSet.getString("numero_serie"));
+
+                ordem.setBicicleta(bicicleta);
+
+                ordens.put(idOrdem, ordem);
+            }
+
+            Servico servico = new Servico();
+
+            servico.setId(resultSet.getLong("servico_id"));
+            servico.setNome(resultSet.getString("servico_nome"));
+
+            ItemOrdemServico item = new ItemOrdemServico();
+
+            item.setId(resultSet.getLong("item_id"));
+            item.setServico(servico);
+            item.setValor(resultSet.getBigDecimal("item_valor"));
+            item.setExecutado(resultSet.getBoolean("executado"));
+
+            ordem.getItens().add(item);
+        }
+
+        return new ArrayList<>(ordens.values());
     }
     
 }//class OrdemServicoDAO.

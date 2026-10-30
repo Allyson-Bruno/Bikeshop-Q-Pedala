@@ -76,8 +76,13 @@
     		</a>
 		</li>
 		
-		<li>Relatório de serviços prestados.</li>
 		
+		<li>
+    		<a href="${pageContext.request.contextPath}/mvc?logica=RelatorioServicosLogica">
+        		Relatório de serviços prestados
+    		</a>
+		</li>		
+
 		<li>
     		<a href="${pageContext.request.contextPath}/mvc?logica=LogoutLogica">
         		Sair
