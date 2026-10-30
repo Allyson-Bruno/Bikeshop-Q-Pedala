@@ -493,7 +493,7 @@ public class OrdemServicoDAO {
              
         	ResultSet resultSet = statement.executeQuery()) {
 
-            return extraiPendentesPagamento(resultSet);
+            return extraiResumoOrdens(resultSet);
 
         } catch (SQLException e) {
             throw new RuntimeException(
@@ -502,7 +502,7 @@ public class OrdemServicoDAO {
         }
     }
     
-    private List<OrdemServico> extraiPendentesPagamento(ResultSet resultSet) throws SQLException {
+    private List<OrdemServico> extraiResumoOrdens(ResultSet resultSet) throws SQLException {
 
         List<OrdemServico> ordens = new ArrayList<>();
 
@@ -582,7 +582,7 @@ public class OrdemServicoDAO {
             statement.setLong(1, id);
 
             try (ResultSet resultSet = statement.executeQuery()) {
-                return extraiExecutada(resultSet);
+                return extraiOrdemComItens(resultSet);
             }
 
         } catch (SQLException e) {
@@ -592,7 +592,7 @@ public class OrdemServicoDAO {
         }
     }
     
-    private OrdemServico extraiExecutada(ResultSet resultSet) throws SQLException {
+    private OrdemServico extraiOrdemComItens(ResultSet resultSet) throws SQLException {
 
         OrdemServico ordem = null;
 
@@ -760,5 +760,105 @@ public class OrdemServicoDAO {
             throw new RuntimeException("Erro ao registrar o pagamento da OS.", e);
         }
     }
+    
+    public List<OrdemServico> listaHistoricoPorCliente(Long idCliente) {
+
+        if (idCliente == null || idCliente <= 0) {
+            throw new IllegalArgumentException(
+                "Informe um cliente válido.");
+        }
+
+        String sql = """
+            SELECT os.id AS ordem_id,
+                   os.data_agendamento,
+                   os.data_execucao,
+                   os.status,
+                   os.desconto,
+                   os.valor_total,
+                   c.id AS cliente_id,
+                   c.nome AS cliente_nome,
+                   c.cpf AS cliente_cpf,
+                   b.id AS bicicleta_id,
+                   b.marca,
+                   b.modelo,
+                   b.numero_serie
+            FROM public.ordem_servico os
+            INNER JOIN public.cliente c ON c.id = os.id_cliente
+            INNER JOIN public.bicicleta b ON b.id = os.id_bicicleta
+            WHERE os.id_cliente = ?
+              AND os.status IN ('EXECUTADA', 'PAGA')
+            ORDER BY os.data_execucao DESC, os.id DESC
+            """;
+
+        try (Connection connection = new ConnectionFactory().getConnection();
+        		
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setLong(1, idCliente);
+
+            try (ResultSet resultSet = statement.executeQuery()) {
+                return extraiResumoOrdens(resultSet);
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(
+                "Erro ao consultar o histórico do cliente.", e
+            );
+        }
+    }
+    
+    public OrdemServico buscarDetalhesPorId(Long id) {
+
+        if (id == null || id <= 0) {
+            throw new IllegalArgumentException("Informe uma OS válida.");
+        }
+
+        String sql = """
+            SELECT os.id AS ordem_id,
+                   os.data_agendamento,
+                   os.data_execucao,
+                   os.status,
+                   os.desconto,
+                   os.valor_total,
+                   c.id AS cliente_id,
+                   c.nome AS cliente_nome,
+                   c.cpf AS cliente_cpf,
+                   b.id AS bicicleta_id,
+                   b.marca,
+                   b.modelo,
+                   b.numero_serie,
+                   i.id AS item_id,
+                   i.valor AS item_valor,
+                   i.executado,
+                   s.id AS servico_id,
+                   s.nome AS servico_nome
+            FROM public.ordem_servico os
+            INNER JOIN public.cliente c ON c.id = os.id_cliente
+            INNER JOIN public.bicicleta b ON b.id = os.id_bicicleta
+            INNER JOIN public.item_ordem_servico i
+                ON i.id_ordem_servico = os.id
+            INNER JOIN public.servico s ON s.id = i.id_servico
+            WHERE os.id = ?
+              AND os.status IN ('EXECUTADA', 'PAGA')
+              AND i.executado = TRUE
+            ORDER BY i.id
+            """;
+
+        try (Connection connection = new ConnectionFactory().getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setLong(1, id);
+
+            try (ResultSet resultSet = statement.executeQuery()) {
+                return extraiOrdemComItens(resultSet);
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(
+                "Erro ao buscar os detalhes da OS.", e
+            );
+        }
+    }
+    
     
 }//class OrdemServicoDAO.

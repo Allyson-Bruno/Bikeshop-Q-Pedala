@@ -64,7 +64,12 @@
     		</a>
 		</li>
 
-		<li>Histórico por cliente.</li>
+		<li>
+    		<a href="${pageContext.request.contextPath}/mvc?logica=HistoricoClienteLogica">
+        		Histórico por cliente
+    		</a>
+		</li>		
+		
 		<li>Histórico por bicicleta.</li>
 		<li>Relatório de serviços prestados.</li>
 		
