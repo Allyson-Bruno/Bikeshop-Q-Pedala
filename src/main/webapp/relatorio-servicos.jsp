@@ -19,12 +19,9 @@
 
     <fmt:setLocale value="pt_BR" />
 
-    <form action="${pageContext.request.contextPath}/mvc"
-          method="get">
+    <form action="${pageContext.request.contextPath}/mvc" method="get">
 
-        <input type="hidden"
-               name="logica"
-               value="RelatorioServicosLogica">
+        <input type="hidden" name="logica" value="RelatorioServicosLogica">
 
         <label for="dataInicial">Data inicial:</label>
         <input type="date"
@@ -58,6 +55,18 @@
             <c:out value="${dataFinalFiltro}" />,
             incluindo as duas datas.
         </p>
+        
+        <c:url var="urlExportarPdf" value="/mvc">
+    		<c:param name="logica" value="ExportarRelatorioPdfLogica" />
+    		<c:param name="dataInicial" value="${dataInicialFiltro}" />
+    		<c:param name="dataFinal" value="${dataFinalFiltro}" />
+		</c:url>
+
+		<p>
+    		<a href="<c:out value='${urlExportarPdf}' />">
+        		Exportar PDF
+    		</a>
+		</p>
 
         <table border="1">
             <thead>
