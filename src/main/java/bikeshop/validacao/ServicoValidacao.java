@@ -4,17 +4,19 @@ import java.math.BigDecimal;
 
 public class ServicoValidacao {
 
-    public static boolean nomeValido(String nome) {
+	public static boolean nomeValido(String nome) {
 
-        if (nome == null) {
-            return false;
-        }
+	    if (nome == null) {
+	        return false;
+	    }
 
-        String nomeTratado = nome.strip();
+	    String nomeTratado = nome.strip();
 
-        return !nomeTratado.isBlank() && nomeTratado.length() <= 120;
-    }
-    
+	    return !nomeTratado.isBlank()
+	        && nomeTratado.length() <= 120
+	        && nomeTratado.codePoints().anyMatch(Character::isLetter);
+	}
+	
     /**
      * A conversão do valor está repetida em CadastroServicoLogica e AlterarValorServicoLogica. 
      * Optei por extrair ela e criar um método compartilhado.
@@ -60,6 +62,8 @@ public class ServicoValidacao {
             //Mas aceita 150.000, pois os zeros extras não mudam o valor
             && valor.stripTrailingZeros().scale() <= 2;
     }
+    
+    
     
     
     

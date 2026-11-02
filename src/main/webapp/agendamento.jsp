@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+    pageEncoding="UTF-8" %>
 
 <%@ taglib uri="jakarta.tags.core" prefix="c" %>
 
@@ -8,124 +8,273 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BikeShop Q-Pedala — Agendamento</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Agendamento — BikeShop Q-Pedala</title>
+
+    <c:import url="/WEB-INF/components/estilos.jsp" />
 </head>
 <body>
 
-    <h1>Agendamento de serviço</h1>
+    <c:import url="/WEB-INF/components/cabecalho.jsp" />
 
-    <c:if test="${not empty erro}">
-        <p><c:out value="${erro}" /></p>
-    </c:if>
+    <main class="container py-4 py-md-5">
 
-    <c:if test="${param.sucesso == 'true'}">
-        <p>Agendamento realizado com sucesso.</p>
-    </c:if>
+        <div class="agendamento-layout">
 
-    <!-- Busca do cliente -->
-    <form action="${pageContext.request.contextPath}/mvc" method="get">
+            <!-- Cartão da esquerda: cliente e dados do agendamento -->
+            <section class="formulario-card agendamento-dados"
+                     aria-labelledby="titulo-agendamento">
 
-        <input type="hidden" name="logica"
-               value="FormularioAgendamentoLogica">
+                <h1 id="titulo-agendamento" class="h3 mb-2">
+                    Agendamento de serviço
+                </h1>
 
-        <label for="cpf">CPF do cliente:</label><br>
+                <p class="formulario-descricao mb-4">
+                    Busque o cliente pelo CPF para selecionar
+                    a bicicleta e os serviços.
+                </p>
 
-        <input type="text" id="cpf" name="cpf"
-               required maxlength="11" pattern="[0-9]{11}"
-               placeholder="Somente os 11 números"
-               value="<c:out value='${param.cpf}' />">
+                <c:if test="${not empty erro}">
+                    <div class="alert alert-danger" role="alert">
+                        <c:out value="${erro}" />
+                    </div>
+                </c:if>
 
-        <button type="submit">Buscar cliente</button>
-    </form>
+                <c:if test="${param.sucesso == 'true'}">
+                    <div class="alert alert-success" role="status">
+                        Agendamento realizado com sucesso.
+                    </div>
+                </c:if>
 
-    <!-- Dados do cliente encontrado -->
-    <c:if test="${not empty cliente}">
+                <!-- Busca do cliente -->
+                <form action="${pageContext.request.contextPath}/mvc"
+                      method="get">
 
-        <h2>Cliente</h2>
+                    <input type="hidden"
+                           name="logica"
+                           value="FormularioAgendamentoLogica">
 
-        <p>Nome: <c:out value="${cliente.nome}" /></p>
-        <p>CPF: <c:out value="${cliente.cpf}" /></p>
-        <p>Telefone: <c:out value="${cliente.telefone}" /></p>
+                    <div class="row g-3 align-items-end">
 
-        <!-- Só permite agendar se houver bicicletas e serviços -->
-        <c:if test="${not empty bicicletas and not empty servicos}">
+                        <div class="col-12 col-sm-7">
+                            <label for="cpf" class="form-label">
+                                CPF do cliente
+                            </label>
 
-            <form action="${pageContext.request.contextPath}/mvc"
-                  method="post">
+                            <input type="text"
+                                   class="form-control"
+                                   id="cpf"
+                                   name="cpf"
+                                   required
+                                   maxlength="11"
+                                   pattern="[0-9]{11}"
+                                   inputmode="numeric"
+                                   placeholder="Somente os 11 números"
+                                   value="<c:out value='${param.cpf}' />">
+                        </div>
 
-                <input type="hidden" name="logica"
-                       value="AgendarServicoLogica">
+                        <div class="col-12 col-sm-5">
+                            <button type="submit" class="btn btn-destaque">
+                                Buscar cliente
+                            </button>
+                        </div>
 
-                <input type="hidden" name="idCliente"
-                       value="<c:out value='${cliente.id}' />">
+                    </div>
 
-                <input type="hidden" name="cpf"
-                       value="<c:out value='${cliente.cpf}' />">
+                </form>
 
-                <label for="idBicicleta">Bicicleta:</label><br>
+                <c:if test="${not empty cliente}">
 
-                <select id="idBicicleta" name="idBicicleta" required>
-                    <option value="">Selecione</option>
+                    <section class="dados-resumo mt-4"
+                             aria-labelledby="titulo-cliente">
 
-                    <c:forEach var="bicicleta" items="${bicicletas}">
-                        <option value="${bicicleta.id}"
-                            ${param.idBicicleta == bicicleta.id.toString()
-                                ? 'selected' : ''}>
-                            <c:out value="${bicicleta.marca}" />
-                            — <c:out value="${bicicleta.modelo}" />
-                            — Série: <c:out value="${bicicleta.numeroSerie}" />
-                        </option>
-                    </c:forEach>
-                </select><br>
+                        <h2 id="titulo-cliente" class="h5 mb-3">
+                            Cliente encontrado
+                        </h2>
 
-                <label for="dataAgendamento">
-                    Data do agendamento:
-                </label><br>
+                        <p class="mb-2">
+                            <strong>Nome:</strong>
+                            <c:out value="${cliente.nome}" />
+                        </p>
 
-                <input type="date" id="dataAgendamento"
-                       name="dataAgendamento" required
-                       value="<c:out value='${param.dataAgendamento}' />"><br>
+                        <p class="mb-2">
+                            <strong>CPF:</strong>
+                            <c:out value="${cliente.cpf}" />
+                        </p>
 
-                <fieldset>
-                    <legend>Selecione um ou mais serviços</legend>
+                        <p class="mb-0">
+                            <strong>Telefone:</strong>
+                            <c:out value="${cliente.telefone}" />
+                        </p>
 
-                    <c:forEach var="servico" items="${servicos}">
+                    </section>
 
-                        <c:set var="selecionado" value="${false}" />
+                    <c:if test="${empty bicicletas}">
+                        <div class="alert alert-warning mt-4" role="status">
+                            Este cliente não possui bicicletas cadastradas.
+                        </div>
+                    </c:if>
 
-                        <c:forEach var="idSelecionado"
-                                   items="${paramValues.idServicos}">
-                            <c:if test="${idSelecionado == servico.id.toString()}">
-                                <c:set var="selecionado" value="${true}" />
-                            </c:if>
+                    <c:if test="${empty servicos}">
+                        <div class="alert alert-warning mt-4" role="status">
+                            Nenhum serviço disponível para agendamento.
+                        </div>
+                    </c:if>
+
+                    <c:if test="${not empty bicicletas and not empty servicos}">
+
+                        <!-- Confirmação do agendamento -->
+                        <form action="${pageContext.request.contextPath}/mvc"
+                              method="post"
+                              id="form-agendamento"
+                              class="mt-4">
+
+                            <input type="hidden"
+                                   name="logica"
+                                   value="AgendarServicoLogica">
+
+                            <input type="hidden"
+                                   name="idCliente"
+                                   value="<c:out value='${cliente.id}' />">
+
+                            <input type="hidden"
+                                   name="cpf"
+                                   value="<c:out value='${cliente.cpf}' />">
+
+                            <div class="mb-3">
+                                <label for="idBicicleta" class="form-label">
+                                    Bicicleta
+                                </label>
+
+                                <select class="form-select"
+                                        data-bs-theme="dark"
+                                        id="idBicicleta"
+                                        name="idBicicleta"
+                                        required>
+
+                                    <option value="">Selecione</option>
+
+                                    <c:forEach var="bicicleta"
+                                               items="${bicicletas}">
+
+                                        <option value="${bicicleta.id}"
+                                            ${param.idBicicleta == bicicleta.id.toString()
+                                                ? 'selected' : ''}>
+
+                                            <c:out value="${bicicleta.marca}" />
+                                            — <c:out value="${bicicleta.modelo}" />
+                                            — Série:
+                                            <c:out value="${bicicleta.numeroSerie}" />
+
+                                        </option>
+
+                                    </c:forEach>
+
+                                </select>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-12 col-sm-6">
+                                    <label for="dataAgendamento"
+                                           class="form-label">
+                                        Data do agendamento
+                                    </label>
+
+                                    <input type="date"
+                                           class="form-control"
+                                           id="dataAgendamento"
+                                           name="dataAgendamento"
+                                           required
+                                           value="<c:out value='${param.dataAgendamento}' />">
+                                </div>
+                            </div>
+
+                            <button type="submit"
+                                    class="btn btn-destaque mt-4">
+                                Confirmar agendamento
+                            </button>
+
+                        </form>
+
+                    </c:if>
+
+                </c:if>
+
+                <div class="mt-4">
+                    <a href="${pageContext.request.contextPath}/menu-principal.jsp"
+                       class="btn btn-outline-light">
+                        Voltar ao início
+                    </a>
+                </div>
+
+            </section>
+
+            <!-- Cartão da direita: seleção dos serviços -->
+            <c:if test="${not empty cliente
+                          and not empty bicicletas
+                          and not empty servicos}">
+
+                <section class="formulario-card agendamento-servicos"
+                         aria-labelledby="titulo-servicos">
+
+                    <h2 id="titulo-servicos" class="h4 mb-2">
+                        Serviços
+                    </h2>
+
+                    <p class="formulario-descricao mb-3">
+                        Selecione um ou mais serviços para a bicicleta.
+                    </p>
+
+                    <fieldset class="servicos-selecao">
+                        <legend class="visually-hidden">
+                            Serviços que serão realizados
+                        </legend>
+
+                        <c:forEach var="servico" items="${servicos}">
+
+                            <c:set var="selecionado" value="${false}" />
+
+                            <c:forEach var="idSelecionado"
+                                       items="${paramValues.idServicos}">
+
+                                <c:if test="${idSelecionado == servico.id.toString()}">
+                                    <c:set var="selecionado" value="${true}" />
+                                </c:if>
+
+                            </c:forEach>
+
+                            <div class="form-check servico-opcao">
+                                <input type="checkbox"
+                                       class="form-check-input"
+                                       id="servico-${servico.id}"
+                                       name="idServicos"
+                                       value="${servico.id}"
+                                       form="form-agendamento"
+                                       ${selecionado ? 'checked' : ''}>
+
+                                <label class="form-check-label"
+                                       for="servico-${servico.id}">
+                                    <c:out value="${servico.nome}" />
+                                </label>
+                            </div>
+
                         </c:forEach>
 
-                        <input type="checkbox"
-                               id="servico-${servico.id}"
-                               name="idServicos"
-                               value="${servico.id}"
-                               ${selecionado ? 'checked' : ''}>
+                    </fieldset>
 
-                        <label for="servico-${servico.id}">
-                            <c:out value="${servico.nome}" />
-                        </label><br>
+                </section>
 
-                    </c:forEach>
-                </fieldset>
+            </c:if>
 
-                <button type="submit">Confirmar agendamento</button>
-            </form>
+        </div>
 
-        </c:if>
-    </c:if>
+    </main>
 
-    <p>
-        <a href="${pageContext.request.contextPath}/menu-principal.jsp">
-            Voltar ao menu
-        </a>
-    </p>
+    <c:import url="/WEB-INF/components/rodape.jsp" />
+
+    <c:import url="/WEB-INF/components/scripts.jsp" />
 
 </body>
 </html>

@@ -157,4 +157,24 @@ public class ServicoValidacaoTest {
         assertFalse(ServicoValidacao.valorValido(valor));
     }
     
+    @Test
+    public void deveRejeitarNomeSomenteComNumeros() {
+        assertFalse(ServicoValidacao.nomeValido("4656465465465414"));
+    }
+
+    @Test
+    public void deveRejeitarNomeSomenteComSimbolos() {
+        assertFalse(ServicoValidacao.nomeValido("--- !!!"));
+    }
+
+    @Test
+    public void deveAceitarNomeComLetrasENumeros() {
+        assertTrue(ServicoValidacao.nomeValido("Revisão de 21 marchas"));
+    }
+
+    @Test
+    public void deveAceitarNomeComLetrasAcentuadas() {
+        assertTrue(ServicoValidacao.nomeValido("Lubrificação"));
+    }
+    
 }//class ServicoValidacaoTest.

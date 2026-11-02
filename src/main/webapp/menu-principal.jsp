@@ -1,106 +1,63 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java"
+         contentType="text/html; charset=UTF-8"
+         pageEncoding="UTF-8" %>
+<%@ taglib uri="jakarta.tags.core" prefix="c" %>
 
-<%@taglib uri = "jakarta.tags.core" prefix="c" %>    
-   
-<%@include file="autenticacao.jsp"%>   
-   
+<%@ include file="autenticacao.jsp" %>
+
 <!DOCTYPE html>
-<html>
+<html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
 
-<c:import url="/WEB-INF/components/estilos.jsp" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Menu BikeShop Q-Pedala</title>
+    <title>Menu BikeShop Q-Pedala</title>
+
+    <c:import url="/WEB-INF/components/estilos.jsp" />
 </head>
-
 <body>
 
-	<ul>
-		
-		<li>
-    		<a href="${pageContext.request.contextPath}/cadastro-cliente.jsp">
-        		Cadastro de clientes
-    		</a>
-		</li>		
+    <c:import url="/WEB-INF/components/cabecalho.jsp" />
 
-		<li>
-			<a href="${pageContext.request.contextPath}/mvc?logica=ListarClientesLogica">
-				Listagem de clientes.
-			</a>
-		</li>
+    <main class="container inicio-main">
 
-		<li>
-    		<a href="${pageContext.request.contextPath}/mvc?logica=FormularioBicicletaLogica">
-        		Cadastro de bicicletas
-    		</a>
-		</li>		
-		
-		<li>
-    		<a href="${pageContext.request.contextPath}/mvc?logica=ListarBicicletasLogica">
-        		Listagem de bicicletas
-    		</a>
-		</li>
-		
-		<li>
-    		<a href="${pageContext.request.contextPath}/cadastro-servico.jsp">
-        		Cadastro de serviços
-    		</a>
-		</li>
-		
-		<li>
-    		<a href="${pageContext.request.contextPath}/mvc?logica=ListarServicosLogica">
-        		Listagem de serviços
-    		</a>
-		</li>
-		
-		<li>
-    		<a href="${pageContext.request.contextPath}/mvc?logica=FormularioAgendamentoLogica">
-        		Agendamento de serviço
-    		</a>
-		</li>		
-		
-		<li>
-    		<a href="${pageContext.request.contextPath}/mvc?logica=ListarAgendamentosLogica">
-        		Agendamentos pendentes
-    		</a>
-		</li>
-		
-		<li>
-    		<a href="${pageContext.request.contextPath}/mvc?logica=ListarPendentesPagamentoLogica">
-        		Realizar pagamento
-    		</a>
-		</li>
+    <section class="inicio-apresentacao"
+             aria-labelledby="titulo-inicio">
 
-		<li>
-    		<a href="${pageContext.request.contextPath}/mvc?logica=HistoricoClienteLogica">
-        		Histórico por cliente
-    		</a>
-		</li>		
-		
-		<li>
-    		<a href="${pageContext.request.contextPath}/mvc?logica=HistoricoBicicletaLogica">
-        		Histórico por bicicleta
-    		</a>
-		</li>
-		
-		
-		<li>
-    		<a href="${pageContext.request.contextPath}/mvc?logica=RelatorioServicosLogica">
-        		Relatório de serviços prestados
-    		</a>
-		</li>		
+        <div class="inicio-visual">
+            <div class="inicio-painel">
+                <img
+                    src="${pageContext.request.contextPath}/resources/img/ciclista.png"
+                    class="inicio-ciclista"
+                    alt="Ciclista realizando uma manobra de BMX">
+            </div>
+        </div>
 
-		<li>
-    		<a href="${pageContext.request.contextPath}/mvc?logica=LogoutLogica">
-        		Sair
-    		</a>
-		</li>
-	</ul>
-	
-	
-	<c:import url="/WEB-INF/components/scripts.jsp" />
-	
+        <div class="inicio-texto">
+            <h1 id="titulo-inicio">
+                Bem-vindo ao sistema
+                <span>BikeShop Q-Pedala</span>
+            </h1>
+
+            <p>
+                Gerencie clientes, bicicletas e serviços
+                em um só lugar.
+            </p>
+
+            <p class="inicio-orientacao">
+                Utilize o menu acima para acessar as funcionalidades.
+            </p>
+        </div>
+
+    </section>
+
+</main>
+    
+    
+	<c:import url="/WEB-INF/components/rodape.jsp" />
+
+    <c:import url="/WEB-INF/components/scripts.jsp" />
+
 </body>
 </html>

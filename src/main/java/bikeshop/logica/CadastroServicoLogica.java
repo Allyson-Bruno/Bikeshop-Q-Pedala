@@ -29,7 +29,7 @@ public class CadastroServicoLogica implements Logica {
         String erro = null;
 
         if (!ServicoValidacao.nomeValido(nome)) {
-            erro = "Informe um nome de serviço com até 120 caracteres.";
+            erro = "Informe um nome de serviço com até 120 caracteres e pelo menos uma letra";
 
         } else if (!ServicoValidacao.valorValido(valor)) {
             erro = "Informe um valor entre 0 e 99999999,99, "
