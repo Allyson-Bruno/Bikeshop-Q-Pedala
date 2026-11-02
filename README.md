@@ -444,7 +444,7 @@ Comandos SQL executados manualmente não passam pelas validações Java da aplic
 
 Tela inicial da aplicação, com acesso às funcionalidades pela barra de navegação.
 
-![Menu principal do BikeShop Q-Pedala](docs/imagens/menu-principal.png)
+![Menu principal do BikeShop Q-Pedala](docs/imagens/menu-principal.jpg)
 
 ## Autor
 
