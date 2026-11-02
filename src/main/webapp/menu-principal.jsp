@@ -9,13 +9,22 @@
 <html>
 <head>
 <meta charset="UTF-8">
+
+<c:import url="/WEB-INF/components/estilos.jsp" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Menu BikeShop Q-Pedala</title>
 </head>
+
 <body>
 
-	<!-- Enviar esse Menu para análise, suspeito que falta os campos de listagem. -->
 	<ul>
-		<li><a href="cadastro-cliente.jsp">Cadastro de clientes</a></li>
+		
+		<li>
+    		<a href="${pageContext.request.contextPath}/cadastro-cliente.jsp">
+        		Cadastro de clientes
+    		</a>
+		</li>		
+
 		<li>
 			<a href="${pageContext.request.contextPath}/mvc?logica=ListarClientesLogica">
 				Listagem de clientes.
@@ -89,6 +98,9 @@
     		</a>
 		</li>
 	</ul>
+	
+	
+	<c:import url="/WEB-INF/components/scripts.jsp" />
 	
 </body>
 </html>
