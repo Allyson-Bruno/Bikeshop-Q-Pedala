@@ -440,10 +440,17 @@ Para representar outro cliente real, crie um novo cadastro. Preservar o cliente 
 
 Comandos SQL executados manualmente não passam pelas validações Java da aplicação. Confira os dados antes de executar as alterações.
 
-Se modificar os exemplos para a entrega acadêmica, mantenha pelo menos:
+## Interface
 
-- 3 clientes;
-- 4 bicicletas;
-- 5 serviços;
-- 8 ordens de serviço, contemplando os status agendada, executada, paga e cancelada.
+Tela inicial da aplicação, com acesso às funcionalidades pela barra de navegação.
 
+![Menu principal do BikeShop Q-Pedala](docs/imagens/menu-principal.png)
+
+## Autor
+
+**Allyson Bruno Batista Santos**
+
+Aluno do 4º período do curso Técnico em Informática do  
+**IF Sudeste MG — Campus Barbacena**.
+
+Projeto desenvolvido para a disciplina de **Programação Web**.
