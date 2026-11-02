@@ -22,8 +22,7 @@ public class ControllerServlet extends HttpServlet {
 		
 		if (parametro == null || parametro.isBlank()) {
 			
-			response.sendError(HttpServletResponse.SC_BAD_REQUEST,
-					"Nenhuma lógica foi informada.");
+			response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Nenhuma lógica foi informada.");
 			
 			//Se os dados estiverem errados já barra a execução.
 			return;
@@ -42,18 +41,35 @@ public class ControllerServlet extends HttpServlet {
 			
 		}
 		
-		String nomeDaclasse = "bikeshop.logica." + parametro;
-	
+		String nomeDaClasse = "bikeshop.logica." + parametro;
+
 		try {
-			
-			Class<?> classe = Class.forName(nomeDaclasse);
-			Logica logica = (Logica) classe.getDeclaredConstructor().newInstance();
-			logica.executa(request, response);
-			
+
+		    Class<?> classe = Class.forName(nomeDaClasse);
+
+		    if (!Logica.class.isAssignableFrom(classe) || classe.isInterface()) {
+
+		        response.sendError(HttpServletResponse.SC_NOT_FOUND, "Operação não encontrada.");
+		        
+		        return;
+		    }
+
+		    Logica logica = (Logica) classe.getDeclaredConstructor().newInstance();
+
+		    logica.executa(request, response);
+
+		} catch (ClassNotFoundException e) {
+
+		    response.sendError(HttpServletResponse.SC_NOT_FOUND, "Operação não encontrada.");
+
 		} catch (Exception e) {
-			throw new ServletException(e);
+
+		    // Registra os detalhes técnicos no log do servidor.
+		    getServletContext().log("Falha ao executar a operação: " + parametro, e);
+
+		    // O web.xml encaminha o erro para erro.jsp.
+		    throw new ServletException("Não foi possível concluir a operação.", e);
 		}
-	
 	}
 	
 }//class ControllerServlet.
