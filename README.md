@@ -2,6 +2,12 @@
 
 Sistema web para gerenciamento dos serviços de uma oficina de bicicletas, desenvolvido como trabalho da disciplina de **Programação Web**, no **4º período do curso Técnico em Informática do IF Sudeste MG — Campus Barbacena**.
 
+## Interface
+
+Tela inicial da aplicação, com acesso às funcionalidades pela barra de navegação.
+
+![Menu principal do BikeShop Q-Pedala](docs/imagens/menu-principal.jpg)
+
 A aplicação permite cadastrar clientes, bicicletas e serviços, acompanhar ordens de serviço desde o agendamento até o pagamento e consultar históricos e relatórios.
 
 ## Funcionalidades
@@ -200,14 +206,16 @@ O dump contém comandos próprios do `psql`, como `\restrict`. Por isso, utilize
 
 Os dados de exemplo incluem:
 
+Os dados de exemplo incluem:
+
 - 3 clientes;
 - 4 bicicletas;
-- 10 serviços;
-- 11 ordens de serviço, distribuídas entre agendadas, executadas, pagas e canceladas.
+- 12 serviços;
+- 14 ordens de serviço: 3 agendadas, 3 executadas, 4 pagas e 4 canceladas.
 
 O arquivo também contém um administrador com senha armazenada como hash. A criação de um administrador próprio será explicada na seção de acesso ao sistema.
 
-> As datas dos exemplos são fixas. A listagem de agendamentos utiliza a data atual como filtro inicial. Para visualizar agendamentos antigos, informe uma data anterior no filtro. Para consultar os serviços executados dos exemplos, utilize um período que inclua outubro de 2026.
+> As datas dos exemplos são fixas. A listagem de agendamentos utiliza a data atual como filtro inicial. Para visualizar agendamentos antigos, informe uma data anterior no filtro. Para consultar todos os serviços executados deste conjunto de exemplos, utilize o período de 01/10/2026 a 30/11/2026.
 
 ### 5. Configurar o Tomcat no Eclipse
 
@@ -439,12 +447,6 @@ Para representar outro cliente real, crie um novo cadastro. Preservar o cliente 
 ### Cuidados com alterações diretas no banco
 
 Comandos SQL executados manualmente não passam pelas validações Java da aplicação. Confira os dados antes de executar as alterações.
-
-## Interface
-
-Tela inicial da aplicação, com acesso às funcionalidades pela barra de navegação.
-
-![Menu principal do BikeShop Q-Pedala](docs/imagens/menu-principal.jpg)
 
 ## Autor
 
