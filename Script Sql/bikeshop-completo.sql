@@ -2,12 +2,12 @@
 -- PostgreSQL database dump
 --
 
-\restrict gnIwtypkEb1gJ1EhIoCIsODniu5DucO45kcbD3WjbMbj6q89v3Y0HQj7OxjrcbT
+\restrict NT91FkAbaaYpowZ8faL7rhcH05Iujj5smnGypo15UpEgqtlfaNc8upQflG1NjdP
 
 -- Dumped from database version 18.4
 -- Dumped by pg_dump version 18.4
 
--- Started on 2026-11-01 12:37:40
+-- Started on 2026-11-02 22:25:59
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -227,8 +227,8 @@ INSERT INTO public.administrador (id, usuario, senha) OVERRIDING SYSTEM VALUE VA
 
 INSERT INTO public.bicicleta (id, marca, modelo, tipo, tamanho_quadro, numero_serie, ano_fabricacao, id_proprietario) OVERRIDING SYSTEM VALUE VALUES (1, 'Caloi', 'Explorer', 'MTB', '17', 'TESTE-BIKE-001', 2022, 2);
 INSERT INTO public.bicicleta (id, marca, modelo, tipo, tamanho_quadro, numero_serie, ano_fabricacao, id_proprietario) OVERRIDING SYSTEM VALUE VALUES (2, 'Sense', 'Impact', 'MTB', 'M', 'TESTE-BIKE-002', 2024, NULL);
-INSERT INTO public.bicicleta (id, marca, modelo, tipo, tamanho_quadro, numero_serie, ano_fabricacao, id_proprietario) OVERRIDING SYSTEM VALUE VALUES (3, 'Specialized', 'Allez', 'Road', '54', 'TESTE-BIKE-003', 2020, 1);
 INSERT INTO public.bicicleta (id, marca, modelo, tipo, tamanho_quadro, numero_serie, ano_fabricacao, id_proprietario) OVERRIDING SYSTEM VALUE VALUES (5, 'Trek', 'Marlin 5', 'MTB', 'M', 'TESTE-BIKE-004', 2023, NULL);
+INSERT INTO public.bicicleta (id, marca, modelo, tipo, tamanho_quadro, numero_serie, ano_fabricacao, id_proprietario) OVERRIDING SYSTEM VALUE VALUES (6, 'Sense', 'Impact', 'MTB', 'M', 'TESTE-BIKE-007', 2008, 7);
 
 
 --
@@ -237,9 +237,9 @@ INSERT INTO public.bicicleta (id, marca, modelo, tipo, tamanho_quadro, numero_se
 -- Data for Name: cliente; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-INSERT INTO public.cliente (id, cpf, nome, data_nascimento, email, telefone) OVERRIDING SYSTEM VALUE VALUES (1, '15041909636', 'Cris Alvez', '2026-10-11', 'cris19@gmail.com', '3288114535');
 INSERT INTO public.cliente (id, cpf, nome, data_nascimento, email, telefone) OVERRIDING SYSTEM VALUE VALUES (2, '52998224725', 'Mariana Teste', '2026-09-15', 'mari@gmail.com', '328845679');
 INSERT INTO public.cliente (id, cpf, nome, data_nascimento, email, telefone) OVERRIDING SYSTEM VALUE VALUES (6, '16899535009', 'Ravi Garcia', '2025-10-28', 'ravi@gmail.com', '(32) 9 8811-4534');
+INSERT INTO public.cliente (id, cpf, nome, data_nascimento, email, telefone) OVERRIDING SYSTEM VALUE VALUES (7, '12345678909', 'Henry Danger', '2026-11-02', 'henry@gmail.com', '465461264652');
 
 
 --
@@ -251,8 +251,6 @@ INSERT INTO public.cliente (id, cpf, nome, data_nascimento, email, telefone) OVE
 INSERT INTO public.item_ordem_servico (id, id_ordem_servico, id_servico, valor, executado) OVERRIDING SYSTEM VALUE VALUES (1, 1, 8, NULL, false);
 INSERT INTO public.item_ordem_servico (id, id_ordem_servico, id_servico, valor, executado) OVERRIDING SYSTEM VALUE VALUES (2, 1, 10, NULL, false);
 INSERT INTO public.item_ordem_servico (id, id_ordem_servico, id_servico, valor, executado) OVERRIDING SYSTEM VALUE VALUES (3, 1, 3, NULL, false);
-INSERT INTO public.item_ordem_servico (id, id_ordem_servico, id_servico, valor, executado) OVERRIDING SYSTEM VALUE VALUES (4, 2, 8, NULL, false);
-INSERT INTO public.item_ordem_servico (id, id_ordem_servico, id_servico, valor, executado) OVERRIDING SYSTEM VALUE VALUES (5, 2, 2, NULL, false);
 INSERT INTO public.item_ordem_servico (id, id_ordem_servico, id_servico, valor, executado) OVERRIDING SYSTEM VALUE VALUES (6, 5, 3, NULL, false);
 INSERT INTO public.item_ordem_servico (id, id_ordem_servico, id_servico, valor, executado) OVERRIDING SYSTEM VALUE VALUES (7, 5, 4, NULL, false);
 INSERT INTO public.item_ordem_servico (id, id_ordem_servico, id_servico, valor, executado) OVERRIDING SYSTEM VALUE VALUES (8, 5, 1, NULL, false);
@@ -260,16 +258,7 @@ INSERT INTO public.item_ordem_servico (id, id_ordem_servico, id_servico, valor, 
 INSERT INTO public.item_ordem_servico (id, id_ordem_servico, id_servico, valor, executado) OVERRIDING SYSTEM VALUE VALUES (10, 7, 10, NULL, false);
 INSERT INTO public.item_ordem_servico (id, id_ordem_servico, id_servico, valor, executado) OVERRIDING SYSTEM VALUE VALUES (11, 7, 2, NULL, false);
 INSERT INTO public.item_ordem_servico (id, id_ordem_servico, id_servico, valor, executado) OVERRIDING SYSTEM VALUE VALUES (12, 7, 5, NULL, false);
-INSERT INTO public.item_ordem_servico (id, id_ordem_servico, id_servico, valor, executado) OVERRIDING SYSTEM VALUE VALUES (18, 9, 1, NULL, false);
-INSERT INTO public.item_ordem_servico (id, id_ordem_servico, id_servico, valor, executado) OVERRIDING SYSTEM VALUE VALUES (19, 10, 8, NULL, false);
-INSERT INTO public.item_ordem_servico (id, id_ordem_servico, id_servico, valor, executado) OVERRIDING SYSTEM VALUE VALUES (20, 10, 5, NULL, false);
-INSERT INTO public.item_ordem_servico (id, id_ordem_servico, id_servico, valor, executado) OVERRIDING SYSTEM VALUE VALUES (21, 10, 7, NULL, false);
-INSERT INTO public.item_ordem_servico (id, id_ordem_servico, id_servico, valor, executado) OVERRIDING SYSTEM VALUE VALUES (22, 10, 6, NULL, false);
-INSERT INTO public.item_ordem_servico (id, id_ordem_servico, id_servico, valor, executado) OVERRIDING SYSTEM VALUE VALUES (23, 10, 9, NULL, false);
-INSERT INTO public.item_ordem_servico (id, id_ordem_servico, id_servico, valor, executado) OVERRIDING SYSTEM VALUE VALUES (24, 11, 5, NULL, false);
-INSERT INTO public.item_ordem_servico (id, id_ordem_servico, id_servico, valor, executado) OVERRIDING SYSTEM VALUE VALUES (26, 11, 6, NULL, false);
 INSERT INTO public.item_ordem_servico (id, id_ordem_servico, id_servico, valor, executado) OVERRIDING SYSTEM VALUE VALUES (13, 8, 1, 150.00, true);
-INSERT INTO public.item_ordem_servico (id, id_ordem_servico, id_servico, valor, executado) OVERRIDING SYSTEM VALUE VALUES (25, 11, 7, 50.00, true);
 INSERT INTO public.item_ordem_servico (id, id_ordem_servico, id_servico, valor, executado) OVERRIDING SYSTEM VALUE VALUES (27, 12, 1, 175.00, true);
 INSERT INTO public.item_ordem_servico (id, id_ordem_servico, id_servico, valor, executado) OVERRIDING SYSTEM VALUE VALUES (28, 12, 7, 50.00, true);
 INSERT INTO public.item_ordem_servico (id, id_ordem_servico, id_servico, valor, executado) OVERRIDING SYSTEM VALUE VALUES (29, 13, 2, NULL, false);
@@ -277,10 +266,25 @@ INSERT INTO public.item_ordem_servico (id, id_ordem_servico, id_servico, valor, 
 INSERT INTO public.item_ordem_servico (id, id_ordem_servico, id_servico, valor, executado) OVERRIDING SYSTEM VALUE VALUES (31, 14, 1, 175.00, true);
 INSERT INTO public.item_ordem_servico (id, id_ordem_servico, id_servico, valor, executado) OVERRIDING SYSTEM VALUE VALUES (32, 14, 2, 250.00, true);
 INSERT INTO public.item_ordem_servico (id, id_ordem_servico, id_servico, valor, executado) OVERRIDING SYSTEM VALUE VALUES (33, 14, 5, 80.00, true);
-INSERT INTO public.item_ordem_servico (id, id_ordem_servico, id_servico, valor, executado) OVERRIDING SYSTEM VALUE VALUES (14, 9, 8, 60.00, true);
-INSERT INTO public.item_ordem_servico (id, id_ordem_servico, id_servico, valor, executado) OVERRIDING SYSTEM VALUE VALUES (15, 9, 10, 50.00, true);
-INSERT INTO public.item_ordem_servico (id, id_ordem_servico, id_servico, valor, executado) OVERRIDING SYSTEM VALUE VALUES (16, 9, 3, 50.00, true);
-INSERT INTO public.item_ordem_servico (id, id_ordem_servico, id_servico, valor, executado) OVERRIDING SYSTEM VALUE VALUES (17, 9, 4, 40.00, true);
+INSERT INTO public.item_ordem_servico (id, id_ordem_servico, id_servico, valor, executado) OVERRIDING SYSTEM VALUE VALUES (38, 16, 3, NULL, false);
+INSERT INTO public.item_ordem_servico (id, id_ordem_servico, id_servico, valor, executado) OVERRIDING SYSTEM VALUE VALUES (39, 16, 4, NULL, false);
+INSERT INTO public.item_ordem_servico (id, id_ordem_servico, id_servico, valor, executado) OVERRIDING SYSTEM VALUE VALUES (34, 15, 5, 80.00, true);
+INSERT INTO public.item_ordem_servico (id, id_ordem_servico, id_servico, valor, executado) OVERRIDING SYSTEM VALUE VALUES (35, 15, 7, 50.00, true);
+INSERT INTO public.item_ordem_servico (id, id_ordem_servico, id_servico, valor, executado) OVERRIDING SYSTEM VALUE VALUES (36, 15, 6, 40.00, true);
+INSERT INTO public.item_ordem_servico (id, id_ordem_servico, id_servico, valor, executado) OVERRIDING SYSTEM VALUE VALUES (37, 15, 9, 30.00, true);
+INSERT INTO public.item_ordem_servico (id, id_ordem_servico, id_servico, valor, executado) OVERRIDING SYSTEM VALUE VALUES (40, 17, 2, NULL, false);
+INSERT INTO public.item_ordem_servico (id, id_ordem_servico, id_servico, valor, executado) OVERRIDING SYSTEM VALUE VALUES (41, 17, 7, NULL, false);
+INSERT INTO public.item_ordem_servico (id, id_ordem_servico, id_servico, valor, executado) OVERRIDING SYSTEM VALUE VALUES (42, 18, 4, 40.00, true);
+INSERT INTO public.item_ordem_servico (id, id_ordem_servico, id_servico, valor, executado) OVERRIDING SYSTEM VALUE VALUES (43, 18, 1, 175.00, true);
+INSERT INTO public.item_ordem_servico (id, id_ordem_servico, id_servico, valor, executado) OVERRIDING SYSTEM VALUE VALUES (44, 18, 2, 250.00, true);
+INSERT INTO public.item_ordem_servico (id, id_ordem_servico, id_servico, valor, executado) OVERRIDING SYSTEM VALUE VALUES (48, 20, 10, NULL, false);
+INSERT INTO public.item_ordem_servico (id, id_ordem_servico, id_servico, valor, executado) OVERRIDING SYSTEM VALUE VALUES (49, 20, 14, NULL, false);
+INSERT INTO public.item_ordem_servico (id, id_ordem_servico, id_servico, valor, executado) OVERRIDING SYSTEM VALUE VALUES (50, 20, 3, NULL, false);
+INSERT INTO public.item_ordem_servico (id, id_ordem_servico, id_servico, valor, executado) OVERRIDING SYSTEM VALUE VALUES (51, 21, 10, 50.00, true);
+INSERT INTO public.item_ordem_servico (id, id_ordem_servico, id_servico, valor, executado) OVERRIDING SYSTEM VALUE VALUES (52, 21, 9, 30.00, true);
+INSERT INTO public.item_ordem_servico (id, id_ordem_servico, id_servico, valor, executado) OVERRIDING SYSTEM VALUE VALUES (45, 19, 8, 60.00, true);
+INSERT INTO public.item_ordem_servico (id, id_ordem_servico, id_servico, valor, executado) OVERRIDING SYSTEM VALUE VALUES (46, 19, 12, 170.00, true);
+INSERT INTO public.item_ordem_servico (id, id_ordem_servico, id_servico, valor, executado) OVERRIDING SYSTEM VALUE VALUES (47, 19, 10, 50.00, true);
 
 
 --
@@ -292,14 +296,17 @@ INSERT INTO public.item_ordem_servico (id, id_ordem_servico, id_servico, valor, 
 INSERT INTO public.ordem_servico (id, id_bicicleta, id_cliente, data_agendamento, data_execucao, status, desconto, valor_total) OVERRIDING SYSTEM VALUE VALUES (1, 1, 2, '2026-10-24', NULL, 'CANCELADA', 0.00, 0.00);
 INSERT INTO public.ordem_servico (id, id_bicicleta, id_cliente, data_agendamento, data_execucao, status, desconto, valor_total) OVERRIDING SYSTEM VALUE VALUES (5, 1, 2, '2026-10-30', NULL, 'CANCELADA', 0.00, 0.00);
 INSERT INTO public.ordem_servico (id, id_bicicleta, id_cliente, data_agendamento, data_execucao, status, desconto, valor_total) OVERRIDING SYSTEM VALUE VALUES (7, 1, 2, '2026-10-31', NULL, 'CANCELADA', 0.00, 0.00);
-INSERT INTO public.ordem_servico (id, id_bicicleta, id_cliente, data_agendamento, data_execucao, status, desconto, valor_total) OVERRIDING SYSTEM VALUE VALUES (2, 3, 1, '2026-10-24', NULL, 'CANCELADA', 0.00, 0.00);
-INSERT INTO public.ordem_servico (id, id_bicicleta, id_cliente, data_agendamento, data_execucao, status, desconto, valor_total) OVERRIDING SYSTEM VALUE VALUES (10, 3, 1, '2026-10-24', NULL, 'AGENDADA', 0.00, 0.00);
 INSERT INTO public.ordem_servico (id, id_bicicleta, id_cliente, data_agendamento, data_execucao, status, desconto, valor_total) OVERRIDING SYSTEM VALUE VALUES (8, 1, 2, '2026-11-20', '2026-10-04', 'EXECUTADA', 0.00, 150.00);
 INSERT INTO public.ordem_servico (id, id_bicicleta, id_cliente, data_agendamento, data_execucao, status, desconto, valor_total) OVERRIDING SYSTEM VALUE VALUES (13, 1, 2, '2026-10-30', NULL, 'AGENDADA', 0.00, 0.00);
 INSERT INTO public.ordem_servico (id, id_bicicleta, id_cliente, data_agendamento, data_execucao, status, desconto, valor_total) OVERRIDING SYSTEM VALUE VALUES (12, 1, 2, '2026-10-30', '2026-10-28', 'PAGA', 0.00, 225.00);
-INSERT INTO public.ordem_servico (id, id_bicicleta, id_cliente, data_agendamento, data_execucao, status, desconto, valor_total) OVERRIDING SYSTEM VALUE VALUES (9, 3, 1, '2026-11-21', '2026-10-26', 'PAGA', 20.00, 200.00);
 INSERT INTO public.ordem_servico (id, id_bicicleta, id_cliente, data_agendamento, data_execucao, status, desconto, valor_total) OVERRIDING SYSTEM VALUE VALUES (14, 1, 2, '2026-12-25', '2026-10-28', 'PAGA', 0.00, 505.00);
-INSERT INTO public.ordem_servico (id, id_bicicleta, id_cliente, data_agendamento, data_execucao, status, desconto, valor_total) OVERRIDING SYSTEM VALUE VALUES (11, 3, 1, '2026-12-18', '2026-10-19', 'PAGA', 0.00, 50.00);
+INSERT INTO public.ordem_servico (id, id_bicicleta, id_cliente, data_agendamento, data_execucao, status, desconto, valor_total) OVERRIDING SYSTEM VALUE VALUES (16, 1, 2, '2026-12-03', NULL, 'CANCELADA', 0.00, 0.00);
+INSERT INTO public.ordem_servico (id, id_bicicleta, id_cliente, data_agendamento, data_execucao, status, desconto, valor_total) OVERRIDING SYSTEM VALUE VALUES (15, 1, 2, '2026-11-24', '2026-11-02', 'EXECUTADA', 0.00, 200.00);
+INSERT INTO public.ordem_servico (id, id_bicicleta, id_cliente, data_agendamento, data_execucao, status, desconto, valor_total) OVERRIDING SYSTEM VALUE VALUES (17, 1, 2, '2026-12-04', NULL, 'AGENDADA', 0.00, 0.00);
+INSERT INTO public.ordem_servico (id, id_bicicleta, id_cliente, data_agendamento, data_execucao, status, desconto, valor_total) OVERRIDING SYSTEM VALUE VALUES (18, 1, 2, '2026-11-06', '2026-11-02', 'PAGA', 46.50, 465.00);
+INSERT INTO public.ordem_servico (id, id_bicicleta, id_cliente, data_agendamento, data_execucao, status, desconto, valor_total) OVERRIDING SYSTEM VALUE VALUES (20, 6, 7, '2026-12-10', NULL, 'AGENDADA', 0.00, 0.00);
+INSERT INTO public.ordem_servico (id, id_bicicleta, id_cliente, data_agendamento, data_execucao, status, desconto, valor_total) OVERRIDING SYSTEM VALUE VALUES (21, 6, 7, '2026-11-13', '2026-11-02', 'EXECUTADA', 0.00, 80.00);
+INSERT INTO public.ordem_servico (id, id_bicicleta, id_cliente, data_agendamento, data_execucao, status, desconto, valor_total) OVERRIDING SYSTEM VALUE VALUES (19, 6, 7, '2026-12-24', '2026-11-02', 'PAGA', 28.00, 280.00);
 
 
 --
@@ -318,6 +325,8 @@ INSERT INTO public.servico (id, nome, valor) OVERRIDING SYSTEM VALUE VALUES (9, 
 INSERT INTO public.servico (id, nome, valor) OVERRIDING SYSTEM VALUE VALUES (10, 'Limpeza e lubrificação', 50.00);
 INSERT INTO public.servico (id, nome, valor) OVERRIDING SYSTEM VALUE VALUES (8, 'Alinhamento de roda', 60.00);
 INSERT INTO public.servico (id, nome, valor) OVERRIDING SYSTEM VALUE VALUES (1, 'Revisão básica', 175.00);
+INSERT INTO public.servico (id, nome, valor) OVERRIDING SYSTEM VALUE VALUES (14, 'Lubrificação e manutenção do movimento central', 90.00);
+INSERT INTO public.servico (id, nome, valor) OVERRIDING SYSTEM VALUE VALUES (12, 'Centralização e balanceamento de rodas de bicicleta', 170.00);
 
 
 --
@@ -335,7 +344,7 @@ SELECT pg_catalog.setval('public.administrador_id_seq', 3, true);
 -- Name: bicicleta_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('public.bicicleta_id_seq', 5, true);
+SELECT pg_catalog.setval('public.bicicleta_id_seq', 6, true);
 
 
 --
@@ -344,7 +353,7 @@ SELECT pg_catalog.setval('public.bicicleta_id_seq', 5, true);
 -- Name: cliente_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('public.cliente_id_seq', 6, true);
+SELECT pg_catalog.setval('public.cliente_id_seq', 7, true);
 
 
 --
@@ -353,7 +362,7 @@ SELECT pg_catalog.setval('public.cliente_id_seq', 6, true);
 -- Name: item_ordem_servico_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('public.item_ordem_servico_id_seq', 33, true);
+SELECT pg_catalog.setval('public.item_ordem_servico_id_seq', 52, true);
 
 
 --
@@ -362,7 +371,7 @@ SELECT pg_catalog.setval('public.item_ordem_servico_id_seq', 33, true);
 -- Name: ordem_servico_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('public.ordem_servico_id_seq', 14, true);
+SELECT pg_catalog.setval('public.ordem_servico_id_seq', 21, true);
 
 
 --
@@ -371,7 +380,7 @@ SELECT pg_catalog.setval('public.ordem_servico_id_seq', 14, true);
 -- Name: servico_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('public.servico_id_seq', 11, true);
+SELECT pg_catalog.setval('public.servico_id_seq', 14, true);
 
 
 --
@@ -526,11 +535,11 @@ ALTER TABLE ONLY public.ordem_servico
     ADD CONSTRAINT ordem_servico_id_cliente_fkey FOREIGN KEY (id_cliente) REFERENCES public.cliente(id);
 
 
--- Completed on 2026-11-01 12:37:41
+-- Completed on 2026-11-02 22:25:59
 
 --
 -- PostgreSQL database dump complete
 --
 
-\unrestrict gnIwtypkEb1gJ1EhIoCIsODniu5DucO45kcbD3WjbMbj6q89v3Y0HQj7OxjrcbT
+\unrestrict NT91FkAbaaYpowZ8faL7rhcH05Iujj5smnGypo15UpEgqtlfaNc8upQflG1NjdP
 
